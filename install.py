@@ -1,6 +1,6 @@
 #Installation Script for BRIDGES Lab
 #Prereqg: Git
-import argparse, subprocess
+import argparse, subprocess, sys
 # Menu 
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
@@ -18,12 +18,11 @@ if args.vpn:
 if args.nsa:
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
-    stanout = subprocess.run(['cd', '..'])
-    print(stanout.stderr)
+    os.chdir('..')
     stanout = subprocess.run(['git', 'pull', repoURL])
     print(stanout.stdout)
-    stanout = subprocess.run(['cd', 'opennsa'])
-    stanout = subprocess.run(['cd', '..'])
-    stanout = subprocess.run(['cd', 'Lab_Installation'])
+    os.chdir('opennsa')
+    os.chdir('..')
+    os.chdir('Lab_Installation')
     print("Installation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
