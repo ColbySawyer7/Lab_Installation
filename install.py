@@ -30,12 +30,12 @@ def install(package):
         print(stanout.stdout)
 
 #OpenVPN
-if args.vpn and not args.quiet:
+if args.vpn:
     print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     install(['openvpn', 'easy-rsa'])
     print("Installation Complete!")
 #OpenNSA
-if args.nsa and not args.quiet:
+if args.nsa:
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
     os.chdir('..')
