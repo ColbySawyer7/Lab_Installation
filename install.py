@@ -1,6 +1,6 @@
 #Installation Script for BRIDGES Lab
 #Prereqg: Git
-import argparse, subprocess, os
+import argparse, subprocess, os, sys
 # Menu 
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
@@ -15,7 +15,7 @@ def update():
     if stanout.stdout is not None:
         print(stanout.stdout)
     print("Update Complete!")
-    
+
 # Pip Dependency Helper func
 def pip_install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
