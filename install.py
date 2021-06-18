@@ -12,14 +12,16 @@ args = parser.parse_args()
 #Update Method for Lab Script
 def update():
     stanout = subprocess.run(['git', 'pull'])
-    print(stanout.stdout)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
 
 
 #OpenVPN
 if args.vpn:
     print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     stanout = subprocess.run(['sudo', 'apt', 'install', 'openvpn', 'easy-rsa'] )
-    print(stanout.stdout)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
     print("Installation Complete!")
 #OpenNSA
 if args.nsa:
@@ -27,7 +29,8 @@ if args.nsa:
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
     os.chdir('..')
     stanout = subprocess.run(['git', 'clone', repoURL])
-    print(stanout.stdout)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
     os.chdir('opennsa')
     os.chdir('..')
     os.chdir('Lab_Installation')
