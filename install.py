@@ -23,7 +23,7 @@ if args.nsa:
     stanout = subprocess.run(['git', 'pull', repoURL])
     print(stanout.stdout)
     stanout = subprocess.run(['cd', 'opennsa'])
-    stanout = subprocess.run(['cd' '..'])
+    stanout = subprocess.run(['cd', '..'])
     stanout = subprocess.run(['cd', 'Lab_Installation'])
     print("Installation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
