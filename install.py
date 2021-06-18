@@ -10,16 +10,20 @@ args = parser.parse_args()
 
 #OpenVPN
 if args.vpn:
-    print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete')
+    print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     stanout = subprocess.run(['sudo', 'apt', 'install', 'openvpn', 'easy-rsa'] )
     print(stanout.stdout)
     print("Installation Complete!")
 #OpenNSA
 if args.nsa:
-    print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete')
+    print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
+    stanout = subprocess.run(['cd', '..'])
+    print(stanout.stderr)
     stanout = subprocess.run(['git', 'pull', repoURL])
     print(stanout.stdout)
-    stanout = subprocess.run(['ls', 'opennsa'])
+    stanout = subprocess.run(['cd', 'opennsa'])
+    stanout = subprocess.run(['cd' '..'])
+    stanout = subprocess.run(['cd', 'Lab_Installation'])
     print("Installation Complete!")
-
+    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
