@@ -37,18 +37,12 @@ if args.vpn:
 #OpenNSA
 if args.nsa:
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
-    cwd = os.getcwd()
-    os.chdir('/')
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
-    answer = input("Would you like to specify the directory youd like OpenNSA to be placed [y/n]? (your root dir will be the default)")
-    if answer is 'y':
-        dir = input("Please provide the full dir path: ")
-    else:
-        dir = '/'
+    os.chdir('..')
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
         print(stanout.stdout)
-    os.chdir(dir + 'opennsa')
+    os.chdir('opennsa')
     # Install Dependencies    
     print('Installing OpenNSA Dependencies...\n\n')
     #Twisted Install
@@ -64,10 +58,9 @@ if args.nsa:
     pip_install('pyOpenSSL')
 
     #Navigate back to Lab Installation dir 
-    os.chdir(cwd)
+    os.chdir('..')
+    os.chdir('Lab_Installation')
     print("Installation Complete!")
-    print("\nNote: OpenNSA is its own directory and you must navigate back to the root/specified directory to find it for futher use\ndir='opennsa'\n")
-    if dir is not '/':
-        print("Your specified dir:" + dir + "\n\n")
+    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
 if args.update:
     update()
