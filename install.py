@@ -6,7 +6,14 @@ parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installatio
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
+parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 args = parser.parse_args()
+
+#Update Method for Lab Script
+def update():
+    stanout = subprocess.run(['git', 'pull'])
+    print(stanout.stdout)
+
 
 #OpenVPN
 if args.vpn:
@@ -26,3 +33,5 @@ if args.nsa:
     os.chdir('Lab_Installation')
     print("Installation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
+if args.update:
+    update()
