@@ -23,7 +23,8 @@ def pip_install(package):
 # Standard Package Installer 
 # **package must be String[]
 def install(package):
-    stanout = subprocess.run(['sudo', 'apt', 'install', package] )
+    command = ['sudo', 'apt', 'install'] + package
+    stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
 
