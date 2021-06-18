@@ -1,6 +1,6 @@
 #Installation Script for BRIDGES Lab
 #Prereqg: Git
-import argparse, subprocess, sys
+import argparse, subprocess, os
 # Menu 
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
