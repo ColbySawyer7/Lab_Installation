@@ -19,7 +19,7 @@ if args.nsa:
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://github.com/NORDUnet/opennsa.git'
     os.chdir('..')
-    stanout = subprocess.run(['git', 'pull', repoURL])
+    stanout = subprocess.run(['git', 'clone', repoURL])
     print(stanout.stdout)
     os.chdir('opennsa')
     os.chdir('..')
