@@ -7,7 +7,7 @@ options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
-parser_quiet = options.add_argument('-q', '--quiet', action='store_true', help='Hide full installation output')
+parser_quiet = parser.add_argument('-q', '--quiet', action='store_true', help='Hide full installation output')
 
 args = parser.parse_args()
 
