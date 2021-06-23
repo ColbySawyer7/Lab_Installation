@@ -32,8 +32,12 @@ def install(package):
 
 #OpenVPN
 if args.vpn:
-    print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
-    install(['openvpn', 'easy-rsa'])
+    #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
+    #install(['openvpn', 'easy-rsa'])
+    repo = 'https://github.com/Nyr/openvpn-install.git'
+    stanout = subprocess.run(['wget','https://git.io/vpn','-O','openvpn-install.sh',' &&','bash','openvpn-install.sh'])
+    if stanout.stdout is not None:
+        print(stanout.stdout)
     print("Installation Complete!")
 #OpenNSA
 if args.nsa:
@@ -57,7 +61,15 @@ if args.nsa:
     install(['postgresql'])
     #pyOPenSSL Install
     pip_install('pyOpenSSL')
-
+    # OpenNSA Configuration
+    #stanout = subprocess.run('python', 'setup.py', 'build')
+    #if stanout.stdout is not None:
+    #    print(stanout.stdout)
+    #stanout = subprocess.run('sudo', 'python', 'setup.py', 'install')
+    #if stanout.stdout is not None:
+    #    print(stanout.stdout)
+    #Creating opennsa DB
+    #
     #Navigate back to Lab Installation dir 
     os.chdir('..')
     os.chdir('Lab_Installation')
