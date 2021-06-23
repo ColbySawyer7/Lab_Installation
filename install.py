@@ -32,12 +32,14 @@ def install(package):
 
 #OpenVPN
 if args.vpn:
+    #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     #install(['openvpn', 'easy-rsa'])
-    repo = 'https://github.com/Nyr/openvpn-install.git'
-    stanout = subprocess.run(['sudo','wget','https://git.io/vpn','-O','openvpn-install.sh'])
-    if stanout.stdout is not None:
-        print(stanout.stdout)
+
+    #OpenVPN Road Warrior Install
+    #This approach utlizes an opensource OpenVPN install and config shell script from Github
+    # repo = 'https://github.com/Nyr/openvpn-install.git'\
+    # Verified entire script 6/23/2021 -- Safe for lab use
     stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
     if stanout.stdout is not None:
         print(stanout.stdout)
