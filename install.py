@@ -35,7 +35,7 @@ if args.vpn:
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     #install(['openvpn', 'easy-rsa'])
     repo = 'https://github.com/Nyr/openvpn-install.git'
-    stanout = subprocess.run(['wget','https://git.io/vpn','-O','openvpn-install.sh',' &&','bash','openvpn-install.sh'])
+    stanout = subprocess.run(['wget','https://git.io/vpn','-O','openvpn-install.sh',' &&','sudo', 'bash', 'openvpn-install.sh'])
     if stanout.stdout is not None:
         print(stanout.stdout)
     print("Installation Complete!")
