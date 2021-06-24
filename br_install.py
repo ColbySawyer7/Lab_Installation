@@ -39,11 +39,11 @@ if args.vpn:
     #OpenVPN Road Warrior Install
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
-    # Verified entire script 6/23/2021 -- Safe for lab use
     stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
     if stanout.stdout is not None:
         print(stanout.stdout)
     print("Installation Complete!")
+    print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
 #OpenNSA
 if args.nsa:
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
