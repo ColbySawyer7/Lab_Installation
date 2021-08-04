@@ -3,16 +3,10 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys
-if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
-    print("This script requires Python 3.7 or higher!")
+if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
+    print("This script requires Python 3.0 or higher!")
     print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
-    ans = input("Would you like to install Python3.7? (y/n)")
-    if ans == 'y' or ans == 'yes':
-        os.system("sudo apt install python3.7")
-        print("Python3.7 Installed -- Retry with command: python3.7 br_install.py [-h |-o |-n |-u]")
-        sys.exit(1)
-    else:
-        sys.exit(1)
+    sys.exit(1)
 
 # Menu Build
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
