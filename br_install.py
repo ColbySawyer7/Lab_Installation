@@ -85,7 +85,7 @@ if args.nsa:
     #Twistar Install
     pip_install('twistar')
     #PostGreSQL Install
-    install(['postgresql'])
+    install('postgresql')
     #pyOPenSSL Install
     pip_install('pyOpenSSL')
     # OpenNSA Configuration
