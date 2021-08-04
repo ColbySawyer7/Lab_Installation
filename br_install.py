@@ -35,6 +35,7 @@ def verify_pip():
     os.system(pip_cmd)
 
 # Pip Dependency Helper func
+# **package must be String
 def pip_install(package):
     command = ["sudo", "pip", "install"] + [package]
     stanout = subprocess.run(command)
@@ -42,7 +43,7 @@ def pip_install(package):
         print(stanout.stdout)
 
 # Standard Package Installer 
-# **package must be String[]
+# **package must be String
 def install(package):
     command = ['sudo', 'apt', 'install'] + [package]
     stanout = subprocess.run(command)
@@ -78,7 +79,8 @@ if args.nsa:
     #Twisted Install
     pip_install('twisted[tls]')
     #Psycopg Install
-    install(['python3-dev', 'libpq-dev'])
+    install('python3-dev')
+    install('libpq-dev')
     pip_install('psycopg2')
     #Twistar Install
     pip_install('twistar')
