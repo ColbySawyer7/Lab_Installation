@@ -3,6 +3,11 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys
+
+# Verify Pip is installed
+pip_cmd = "sudo apt install python-pip"
+os.system(pip_cmd)
+
 # Menu Build
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
