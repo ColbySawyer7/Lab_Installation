@@ -6,12 +6,13 @@ import argparse, subprocess, os, sys
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
     print("This script requires Python 3.7 or higher!")
     print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
-    print("Retry with command: python3.7 br_install.py [-h |-o |-n |-u ]")
-    sys.exit(1)
-
-# Verify Pip is installed
-pip_cmd = "sudo apt install python-pip"
-os.system(pip_cmd)
+    ans = input("Would you like to install Python3.7? (y/n)")
+    if ans == 'y' or ans == 'yes':
+        os.system("sudo apt install python3.7")
+        print("Python3.7 Installed -- Retry with command: python3.7 br_install.py [-h |-o |-n |-u]")
+        sys.exit(1)
+    else:
+        sys.exit(1)
 
 # Menu Build
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
@@ -27,6 +28,11 @@ def update():
     if stanout.stdout is not None:
         print(stanout.stdout)
     print("Update Complete!")
+
+def verify_pip():
+    # Verify Pip is installed
+    pip_cmd = "sudo apt install python-pip"
+    os.system(pip_cmd)
 
 # Pip Dependency Helper func
 def pip_install(package):
@@ -63,7 +69,8 @@ if args.nsa:
     if stanout.stdout is not None:
         print(stanout.stdout)
     os.chdir('opennsa')
-    # Install Dependencies    
+    # Install Dependencies  
+    verify_pip() 
     print('Installing OpenNSA Dependencies...\n\n')
     #Twisted Install
     pip_install('twisted[tls]')
