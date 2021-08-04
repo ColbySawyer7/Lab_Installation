@@ -36,7 +36,10 @@ def verify_pip():
 
 # Pip Dependency Helper func
 def pip_install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    command = ["sudo", "pip", "install"] + package
+    stanout = subprocess.run(command)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
 
 # Standard Package Installer 
 # **package must be String[]
