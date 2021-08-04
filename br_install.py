@@ -100,7 +100,7 @@ if args.nsa:
     #Navigate back to Lab Installation dir 
     os.chdir('..')
     os.chdir('Lab_Installation')
-    print("Installation Complete!")
+    print("\n\nInstallation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
 if args.update:
     update()
