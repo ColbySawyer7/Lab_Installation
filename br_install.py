@@ -3,6 +3,11 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys
+if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
+    print("This script requires Python 3.7 or higher!")
+    print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
+    print("Retry with command: python3.7 br_install.py [-h |-o |-n |-u ]")
+    sys.exit(1)
 
 # Verify Pip is installed
 pip_cmd = "sudo apt install python-pip"
