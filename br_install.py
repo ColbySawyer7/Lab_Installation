@@ -30,8 +30,8 @@ def verify_pip():
 
 # Pip Dependency Helper func
 # **package must be String
-def pip_install(package):
-    command = ["sudo", "pip", "install"] + [package]
+def pip_install():
+    command = ["sudo", "pip", "install","-r", "requirements.txt"]
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
@@ -70,18 +70,14 @@ if args.nsa:
     # Install Dependencies  
     verify_pip() 
     print('Installing OpenNSA Dependencies...\n\n')
-    #Twisted Install
-    pip_install('twisted[tls]')
     #Psycopg Install
     install('python3-dev')
     install('libpq-dev')
-    pip_install('psycopg2')
     #Twistar Install
-    pip_install('twistar')
     #PostGreSQL Install
     install('postgresql')
     #pyOPenSSL Install
-    pip_install('pyOpenSSL')
+    pip_install()
     # OpenNSA Configuration
     #stanout = subprocess.run('python', 'setup.py', 'build')
     #if stanout.stdout is not None:

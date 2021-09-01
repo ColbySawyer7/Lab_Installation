@@ -1,0 +1,4 @@
+twisted[tls]
+psycopg2
+twistar
+pyOpenSSL
