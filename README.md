@@ -9,7 +9,7 @@ Command:
   git pull https://github.com/ColbySawyer7/Lab_Installation.git
  
 ## Usage
-###General Help
+### General Help
 
   python3 br_install.py -h
   
