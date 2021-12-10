@@ -113,7 +113,6 @@ def setup_opennsa(setup_db=False):
             print('ERROR: This is not a valid path')
     print("OpenNSA Instance Setup complete")
 
-
 #OpenVPN
 if args.vpn:
     #Hard Code Install
@@ -153,7 +152,7 @@ if args.nsa:
     install('python3-bcrypt')
 
     # OpenNSA Configuration
-    reply = str(raw_input('Would you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+    reply = str(input('Would you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         setup_opennsa(True)
     else:
