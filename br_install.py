@@ -68,11 +68,11 @@ def setup_opennsa(setup_db=False):
 
     os.chdir('../opennsa3')
 
-    stanout = subprocess.run('python', 'setup.py', 'build')
+    stanout = subprocess.run(['python', 'setup.py', 'build'])
     if stanout.stdout is not None:
         print(stanout.stdout)
 
-    stanout = subprocess.run('sudo', 'python', 'setup.py', 'install')
+    stanout = subprocess.run(['sudo', 'python', 'setup.py', 'install'])
     if stanout.stdout is not None:
         print(stanout.stdout)
 
