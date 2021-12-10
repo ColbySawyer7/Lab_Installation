@@ -1,4 +1,5 @@
-twisted[tls]
-psycopg2
+twisted
+psycopg2-binary
 twistar
+setuptools-rust
 pyOpenSSL

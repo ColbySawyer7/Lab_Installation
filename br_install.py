@@ -25,8 +25,26 @@ def update():
 
 def verify_pip():
     # Verify Pip is installed
-    pip_cmd = "sudo apt install python-pip"
+    pip_cmd = "sudo apt install python3-pip"
     os.system(pip_cmd)
+
+def verify_python3():
+    python3_command = ['sudo', 'apt', 'install', 'python3']
+    python_remove_command = ['sudo', 'apt', 'purge', 'python']
+    python_redirect_command = ['sudo' ,'ln' ,'-s' ,'/usr/bin/python3' ,'/usr/bin/python']
+    stanout = subprocess.run(python_remove_command)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    stanout = subprocess.run(python3_command)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    stanout = subprocess.run(-python_redirect_command)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+  
+    print("Python Version Verified")
 
 # Pip Dependency Helper func
 # **package must be String
@@ -44,6 +62,26 @@ def install(package):
     if stanout.stdout is not None:
         print(stanout.stdout)
 
+def setup_opennsa(setup_db=False):
+    change_to_opennsa_dir = ['cd', '../opennsa']
+    stanout = subprocess.run(change_to_opennsa_dir)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    stanout = subprocess.run('python', 'setup.py', 'build')
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    stanout = subprocess.run('sudo', 'python', 'setup.py', 'install')
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    if setup_db:
+        print("Database configuration starting")
+
+    print("OpenNSA Instance Setup complete")
+
+
 #OpenVPN
 if args.vpn:
     #Hard Code Install
@@ -60,33 +98,31 @@ if args.vpn:
     print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
 #OpenNSA
 if args.nsa:
+    #Clone OpenNSA (From Geant Gitlab)
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
-    repoURL = 'https://github.com/NORDUnet/opennsa.git'
+    repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
     os.chdir('..')
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
         print(stanout.stdout)
     os.chdir('opennsa')
-    # Install Dependencies  
-    verify_pip() 
+
+    # Install Dependencies
+    verify_python3()
+    verify_pip()
+
     print('Installing OpenNSA Dependencies...\n\n')
-    #Psycopg Install
     install('python3-dev')
     install('libpq-dev')
-    #Twistar Install
     #PostGreSQL Install
     install('postgresql')
-    #pyOPenSSL Install
+    #Pip dependencies Install
     pip_install()
+    install('python3-bcrypt')
+
     # OpenNSA Configuration
-    #stanout = subprocess.run('python', 'setup.py', 'build')
-    #if stanout.stdout is not None:
-    #    print(stanout.stdout)
-    #stanout = subprocess.run('sudo', 'python', 'setup.py', 'install')
-    #if stanout.stdout is not None:
-    #    print(stanout.stdout)
-    #Creating opennsa DB
-    #
+    #setup_opennsa()
+
     #Navigate back to Lab Installation dir 
     os.chdir('..')
     os.chdir('Lab_Installation')
