@@ -3,6 +3,8 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys
+from constants import db_user, db_name
+
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     print("This script requires Python 3.0 or higher!")
     print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
@@ -78,7 +80,37 @@ def setup_opennsa(setup_db=False):
 
     if setup_db:
         print("Database configuration starting")
+        commands = [
+            ['sudo' ,'adduser','--gecos' ,'GECOS', db_user],
+            ['sudo' ,'su' ,'–','postgres'],
+            ['createdb', db_name],
+            ['createuser', db_user],
+            ['exit']
+        ]
+        for command in commands:
+            stanout = subprocess.run(command)
+            if stanout.stdout is not None:
+                print(stanout.stdout)
 
+        print("Database created")
+        schema_path = input("Please specify the ENTIRE path to the schema.sql file")
+        if os.path.isfile(schema_path):
+            if schema_path[-3] == 'sql':
+                print('Filling Database from Schema')
+                commands = [
+                    ['sudo', 'su', '-', 'opennsa'],
+                    ['psql', 'opennsa'],
+                    ['\i', schema_path],
+                    ['exit']
+                ]
+                for command in commands:
+                    stanout = subprocess.run(command)
+                    if stanout.stdout is not None:
+                        print(stanout.stdout)
+            else:
+                print("ERROR: This is not a valid sql file")
+        else:
+            print('ERROR: This is not a valid path')
     print("OpenNSA Instance Setup complete")
 
 
@@ -121,7 +153,11 @@ if args.nsa:
     install('python3-bcrypt')
 
     # OpenNSA Configuration
-    #setup_opennsa()
+    reply = str(raw_input('Would you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+    if reply[0] == 'y':
+        setup_opennsa(True)
+    else:
+        setup_opennsa()
 
     #Navigate back to Lab Installation dir 
     os.chdir('..')
