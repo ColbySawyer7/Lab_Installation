@@ -65,10 +65,8 @@ def install(package):
         print(stanout.stdout)
 
 def setup_opennsa(setup_db=False):
-    change_to_opennsa_dir = ['cd', '../opennsa3']
-    stanout = subprocess.run(change_to_opennsa_dir)
-    if stanout.stdout is not None:
-        print(stanout.stdout)
+
+    os.chdir('../opennsa3')
 
     stanout = subprocess.run('python', 'setup.py', 'build')
     if stanout.stdout is not None:
@@ -152,7 +150,8 @@ if args.nsa:
     install('python3-bcrypt')
 
     # OpenNSA Configuration
-    reply = str(input('Would you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+    print("\n\nOpenNSA Configuration Starting ...")
+    reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         setup_opennsa(True)
     else:
