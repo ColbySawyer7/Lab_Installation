@@ -63,7 +63,7 @@ def install(package):
         print(stanout.stdout)
 
 def setup_opennsa(setup_db=False):
-    change_to_opennsa_dir = ['cd', '../opennsa']
+    change_to_opennsa_dir = ['cd', '../opennsa3']
     stanout = subprocess.run(change_to_opennsa_dir)
     if stanout.stdout is not None:
         print(stanout.stdout)
@@ -105,7 +105,7 @@ if args.nsa:
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
         print(stanout.stdout)
-    os.chdir('opennsa')
+    os.chdir('opennsa3')
 
     # Install Dependencies
     verify_python3()
@@ -127,6 +127,6 @@ if args.nsa:
     os.chdir('..')
     os.chdir('Lab_Installation')
     print("\n\nInstallation Complete!")
-    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa'\n\n")
+    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa3'\n\n")
 if args.update:
     update()
