@@ -40,7 +40,7 @@ def verify_python3():
     if stanout.stdout is not None:
         print(stanout.stdout)
 
-    stanout = subprocess.run(-python_redirect_command)
+    stanout = subprocess.run(python_redirect_command)
     if stanout.stdout is not None:
         print(stanout.stdout)
   
