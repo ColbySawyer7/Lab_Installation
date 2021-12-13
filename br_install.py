@@ -111,6 +111,12 @@ def setup_opennsa(setup_db=False):
             print('ERROR: This is not a valid path')
     print("OpenNSA Instance Setup complete")
 
+def generate_ssl():
+    command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days 365', '-newkey rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out opennsa-selfsigned.crt']
+    stanout = subprocess.run(command)
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
 #OpenVPN
 if args.vpn:
     #Hard Code Install
@@ -157,9 +163,32 @@ if args.nsa:
     else:
         setup_opennsa()
 
-    #Navigate back to Lab Installation dir 
-    os.chdir('..')
-    os.chdir('Lab_Installation')
+    # Certification Creation 
+    reply = str(input("\nWould you like to generate a self-singed certification? (y/n)")).lower().strip()
+    if reply[0] == 'y':
+        generate_ssl_cert()
+        os.mkdir('keys')
+        os.mkdir('certs')
+        commands = [
+            ['sudo','cp','opennsa-selfsigned.key' 'keys/opennsa-selfsigned.key'],
+            ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
+        ]
+        for command in commands:
+            stanout = subprocess.run(command)
+            if stanout.stdout is not None:
+                print(stanout.stdout)
+    # Change ownership for certs to Opennsa user only
+    uid = pwd.getpwnam("nobody").pw_uid
+    os.chown('/keys', uid)
+
+    reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
+    if reply[0] == 'y':
+        command = ['twistd', '-yn', 'opennsa.tac']
+    else:
+        #Navigate back to Lab Installation dir 
+        os.chdir('..')
+        os.chdir('Lab_Installation')
+        
     print("\n\nInstallation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa3'\n\n")
 if args.update:
