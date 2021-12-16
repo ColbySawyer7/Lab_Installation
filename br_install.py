@@ -3,7 +3,8 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys, pwd, grp
-from constants import db_user, db_name
+from constants import db_user, db_name, default_path
+import psycopg2
 
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     print("This script requires Python 3.0 or higher!")
@@ -68,6 +69,39 @@ def setup_opennsa(setup_db=False):
 
     os.chdir('../opennsa3')
 
+    if setup_db:
+        print("Database configuration starting")
+
+        #Connect to DB
+        conn = psycopg2.connect(host='localhost', user='postgres', password='postgres')
+        with conn.cursor() as cursor:
+            commands =[
+                    'create user '+db_user+';',
+                    'create database '+db_name+';',
+            ]
+            for command in commands:
+                cursor.execute(command)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print('Database created')
+
+        path = default_path
+        schema_path = input("Please specify the ENTIRE path to the schema.sql file (leave blank for default path)")
+        if os.path.isfile(schema_path):
+            if schema_path[-3] == 'sql':
+                path = schema_path
+
+        #Connect to new OpenNSA DB and fill from SQL file
+        conn = psycopg2.connect(host='localhost', user='opennsa', password='')
+        print("Filling Databse from file: " + path)
+        with conn.cursor() as cursor:
+            cursor.execute(open(path, "r").read())
+            conn.commit()
+            cursor.close()
+            conn.close()
+            print('Database filled from file' + path)
+
     stanout = subprocess.run(['python', 'setup.py', 'build'])
     if stanout.stdout is not None:
         print(stanout.stdout)
@@ -76,38 +110,6 @@ def setup_opennsa(setup_db=False):
     if stanout.stdout is not None:
         print(stanout.stdout)
 
-    if setup_db:
-        print("Database configuration starting")
-        commands = [
-            ['sudo' ,'adduser','--gecos' ,'GECOS', db_user],
-            ['sudo' ,'su' ,'–','postgres'],
-            ['createdb', db_name],
-            ['createuser', db_user],
-            ['exit']
-        ]
-        for command in commands:
-            stanout = subprocess.run(command)
-            if stanout.stdout is not None:
-                print(stanout.stdout)
-
-        print("Database created")
-        schema_path = input("Please specify the ENTIRE path to the schema.sql file")
-        if os.path.isfile(schema_path):
-            if schema_path[-3] == 'sql':
-                print('Filling Database from Schema')
-                commands = [
-                    ['sudo', 'su', '-', 'opennsa'],
-                    ['psql', 'opennsa'],
-                    ['\i', schema_path],
-                ]
-                for command in commands:
-                    stanout = subprocess.run(command)
-                    if stanout.stdout is not None:
-                        print(stanout.stdout)
-            else:
-                print("ERROR: This is not a valid sql file")
-        else:
-            print('ERROR: This is not a valid path')
     print("OpenNSA Instance Setup complete")
 
 def generate_ssl_cert():
@@ -115,6 +117,19 @@ def generate_ssl_cert():
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
+    
+    if not os.path.exists('keys'):
+            os.makedirs('keys')
+    if not os.path.exists('certs'):
+        os.makedirs('certs')
+    commands = [
+        ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
+        ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
+    ]
+    for command in commands:
+        stanout = subprocess.run(command)
+        if stanout.stdout is not None:
+            print(stanout.stdout)
 
 #OpenVPN
 if args.vpn:
@@ -156,8 +171,9 @@ if args.nsa:
     install('python3-bcrypt')
 
     # OpenNSA Configuration
+
     print("\n\nOpenNSA Configuration Starting ...")
-    reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+    #reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         setup_opennsa(True)
     else:
@@ -167,18 +183,7 @@ if args.nsa:
     reply = str(input("\nWould you like to generate a self-singed certification? (y/n)")).lower().strip()
     if reply[0] == 'y':
         generate_ssl_cert()
-        if not os.path.exists('keys'):
-            os.makedirs('keys')
-        if not os.path.exists('certs'):
-            os.makedirs('certs')
-        commands = [
-            ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
-            ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
-        ]
-        for command in commands:
-            stanout = subprocess.run(command)
-            if stanout.stdout is not None:
-                print(stanout.stdout)
+        
     # Change ownership for certs to Opennsa user only.
     #gid = grp.getgrnam("nogroup").gr_gid
     #uid = pwd.getpwnam("opennsa").pw_uid

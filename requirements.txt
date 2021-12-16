@@ -1,4 +1,5 @@
 twisted
+psycopg2
 psycopg2-binary
 twistar
 setuptools-rust
