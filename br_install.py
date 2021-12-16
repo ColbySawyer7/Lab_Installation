@@ -73,7 +73,7 @@ def setup_opennsa(setup_db=False):
         print("Database configuration starting")
 
         #Connect to DB
-        conn = psycopg2.connect(host='localhost', user='postgres', password='postgres')
+        conn = psycopg2.connect(host='localhost', user='postgres')
         with conn.cursor() as cursor:
             commands =[
                     'create user '+db_user+';',
@@ -93,7 +93,7 @@ def setup_opennsa(setup_db=False):
                 path = schema_path
 
         #Connect to new OpenNSA DB and fill from SQL file
-        conn = psycopg2.connect(host='localhost', user='opennsa', password='')
+        conn = psycopg2.connect(host='localhost', user='opennsa')
         print("Filling Databse from file: " + path)
         with conn.cursor() as cursor:
             cursor.execute(open(path, "r").read())
