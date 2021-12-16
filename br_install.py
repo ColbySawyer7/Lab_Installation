@@ -170,7 +170,7 @@ if args.nsa:
         os.mkdir('keys')
         os.mkdir('certs')
         commands = [
-            ['sudo','cp','opennsa-selfsigned.key' 'keys/opennsa-selfsigned.key'],
+            ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
             ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
         ]
         for command in commands:
@@ -179,13 +179,8 @@ if args.nsa:
                 print(stanout.stdout)
     # Change ownership for certs to Opennsa user only.
     gid = grp.getgrnam("nogroup").gr_gid
-
-
-
-
-
     uid = pwd.getpwnam("opennsa").pw_uid
-    os.chown('/keys', uid, gid)
+    os.chown('keys', uid, gid)
 
     reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
