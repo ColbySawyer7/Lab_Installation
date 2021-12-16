@@ -6,6 +6,7 @@ import argparse, subprocess, os, sys, pwd, grp
 from constants import db_user, db_name, db_password, default_path
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+from psycopg2.errors import DuplicateObject
 
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     print("This script requires Python 3.0 or higher!")
@@ -85,8 +86,8 @@ def setup_opennsa(setup_db=False):
             for command in commands:
                 try:
                     cursor.execute(command)
-                except psycopg2.errors:
-                    conn.rollback()
+                except DuplicateObject as e:
+                    print(e + 'Already Created')
         conn.commit()
         cursor.close()
         conn.close()
