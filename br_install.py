@@ -2,7 +2,7 @@
 #Note: OpenNSA is installed in the working dir parent. We dont not yet support specifying dir for OpenNSA
 #Prereqg: Git
 #-h or --help for assistance
-import argparse, subprocess, os, sys
+import argparse, subprocess, os, sys, pwd
 from constants import db_user, db_name
 
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
@@ -99,7 +99,6 @@ def setup_opennsa(setup_db=False):
                     ['sudo', 'su', '-', 'opennsa'],
                     ['psql', 'opennsa'],
                     ['\i', schema_path],
-                    ['exit']
                 ]
                 for command in commands:
                     stanout = subprocess.run(command)
@@ -111,7 +110,7 @@ def setup_opennsa(setup_db=False):
             print('ERROR: This is not a valid path')
     print("OpenNSA Instance Setup complete")
 
-def generate_ssl():
+def generate_ssl_cert():
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days 365', '-newkey rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
@@ -178,7 +177,7 @@ if args.nsa:
             if stanout.stdout is not None:
                 print(stanout.stdout)
     # Change ownership for certs to Opennsa user only
-    uid = pwd.getpwnam("nobody").pw_uid
+    uid = pwd.getpwnam("opennsa").pw_uid
     os.chown('/keys', uid)
 
     reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
