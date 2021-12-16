@@ -173,7 +173,7 @@ if args.nsa:
     # OpenNSA Configuration
 
     print("\n\nOpenNSA Configuration Starting ...")
-    #reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+    reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         setup_opennsa(True)
     else:
