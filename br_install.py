@@ -67,6 +67,8 @@ def install(package):
     if stanout.stdout is not None:
         print(stanout.stdout)
 
+# OpenNSA Setup Procedure
+# args setup_db boolean: True will configure and fill database
 def setup_opennsa(setup_db=False):
 
     os.chdir('../opennsa3')
@@ -122,8 +124,11 @@ def setup_opennsa(setup_db=False):
     if stanout.stdout is not None:
         print(stanout.stdout)
 
+    print('//=============================================================//')
     print("OpenNSA Instance Setup complete")
+    print('//=============================================================//\n\n')
 
+#Generate SSL certificate for OpenNSA test environment
 def generate_ssl_cert():
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
@@ -160,7 +165,9 @@ if args.vpn:
 #OpenNSA
 if args.nsa:
     #Clone OpenNSA (From Geant Gitlab)
+    print('//=============================================================//')
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
+    print('//=============================================================//\n')
     repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
     os.chdir('..')
     stanout = subprocess.run(['git', 'clone', repoURL])
@@ -173,7 +180,10 @@ if args.nsa:
     verify_python3()
     verify_pip()
 
-    print('Installing OpenNSA Dependencies...\n\n')
+    print('//=============================================================//')
+    print('Installing OpenNSA Dependencies...\n')
+    print('//=============================================================//\n\n')
+
     install('python3-dev')
     install('libpq-dev')
     #PostGreSQL Install
@@ -183,8 +193,10 @@ if args.nsa:
     install('python3-bcrypt')
 
     # OpenNSA Configuration
-
+    print('//=============================================================//')
     print("\n\nOpenNSA Configuration Starting ...")
+    print('//=============================================================//\n\n')
+
     reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         setup_opennsa(True)
@@ -192,7 +204,7 @@ if args.nsa:
         setup_opennsa()
 
     # Certification Creation 
-    reply = str(input("\nWould you like to generate a self-singed certification? (y/n)")).lower().strip()
+    reply = str(input("\nWould you like to generate a self-singed certification? (y/n): ")).lower().strip()
     if reply[0] == 'y':
         generate_ssl_cert()
         
@@ -209,9 +221,13 @@ if args.nsa:
         #Navigate back to Lab Installation dir 
         os.chdir('..')
         os.chdir('Lab_Installation')
-        
+    
+    print('//=============================================================//')
     print("\n\nInstallation Complete!")
-    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa3'\n\n")
+    print('//=============================================================//')
+    print('//=============================================================//')
+    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use \ndir=\'opennsa3\'")
     print('\n ALERT: It is up to the user to secure the Database after creation. Passwords used for creation are too simple for production')
+    print('//=============================================================//')
 if args.update:
     update()
