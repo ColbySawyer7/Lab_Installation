@@ -87,7 +87,7 @@ def setup_opennsa(setup_db=False):
                 try:
                     cursor.execute(command)
                 except DuplicateObject as e:
-                    print(e + 'Already Created')
+                    print(str(e) + 'Already Created')
         conn.commit()
         cursor.close()
         conn.close()
