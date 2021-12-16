@@ -111,7 +111,7 @@ def setup_opennsa(setup_db=False):
     print("OpenNSA Instance Setup complete")
 
 def generate_ssl_cert():
-    command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days 365', '-newkey rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out opennsa-selfsigned.crt']
+    command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
@@ -139,6 +139,7 @@ if args.nsa:
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
         print(stanout.stdout)
+
     os.chdir('opennsa3')
 
     # Install Dependencies
@@ -178,6 +179,11 @@ if args.nsa:
                 print(stanout.stdout)
     # Change ownership for certs to Opennsa user only.
     gid = grp.getgrnam("nogroup").gr_gid
+
+
+
+
+
     uid = pwd.getpwnam("opennsa").pw_uid
     os.chown('/keys', uid, gid)
 
