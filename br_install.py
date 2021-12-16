@@ -167,8 +167,10 @@ if args.nsa:
     reply = str(input("\nWould you like to generate a self-singed certification? (y/n)")).lower().strip()
     if reply[0] == 'y':
         generate_ssl_cert()
-        os.mkdir('keys')
-        os.mkdir('certs')
+        if not os.path.exists('keys'):
+            os.makedirs('keys')
+        if not os.path.exists('certs'):
+            os.makedirs('certs')
         commands = [
             ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
             ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
@@ -178,10 +180,11 @@ if args.nsa:
             if stanout.stdout is not None:
                 print(stanout.stdout)
     # Change ownership for certs to Opennsa user only.
-    gid = grp.getgrnam("nogroup").gr_gid
-    uid = pwd.getpwnam("opennsa").pw_uid
-    os.chown('keys', uid, gid)
-
+    #gid = grp.getgrnam("nogroup").gr_gid
+    #uid = pwd.getpwnam("opennsa").pw_uid
+    #os.chown('keys', uid, gid)
+    print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+    
     reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
     if reply[0] == 'y':
         command = ['twistd', '-yn', 'opennsa.tac']
