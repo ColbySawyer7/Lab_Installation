@@ -83,7 +83,10 @@ def setup_opennsa(setup_db=False):
                     'alter user '+db_user+' password '+db_password+';'
             ]
             for command in commands:
-                cursor.execute(command)
+                try:
+                    cursor.execute(command)
+                except psycopg2.IntegrityError:
+                    conn.rollback()
         conn.commit()
         cursor.close()
         conn.close()
