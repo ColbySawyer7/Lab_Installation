@@ -5,6 +5,7 @@
 import argparse, subprocess, os, sys, pwd, grp
 from constants import db_user, db_name, default_path
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     print("This script requires Python 3.0 or higher!")
@@ -74,6 +75,7 @@ def setup_opennsa(setup_db=False):
 
         #Connect to DB
         conn = psycopg2.connect(host='localhost', user='postgres', password='postgres')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         with conn.cursor() as cursor:
             commands =[
                     'create user '+db_user+';',
@@ -94,6 +96,7 @@ def setup_opennsa(setup_db=False):
 
         #Connect to new OpenNSA DB and fill from SQL file
         conn = psycopg2.connect(host='localhost', user='opennsa')
+        conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         print("Filling Databse from file: " + path)
         with conn.cursor() as cursor:
             cursor.execute(open(path, "r").read())
