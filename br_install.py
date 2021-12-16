@@ -73,7 +73,7 @@ def setup_opennsa(setup_db=False):
         print("Database configuration starting")
 
         #Connect to DB
-        conn = psycopg2.connect(host='localhost', user='postgres')
+        conn = psycopg2.connect(host='localhost', user='postgres', password='postgres')
         with conn.cursor() as cursor:
             commands =[
                     'create user '+db_user+';',
