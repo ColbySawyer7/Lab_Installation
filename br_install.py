@@ -104,7 +104,7 @@ def setup_opennsa(setup_db=False):
                 path = schema_path
 
         #Connect to new OpenNSA DB and fill from SQL file
-        conn = psycopg2.connect(host='localhost', user='opennsa')
+        conn = psycopg2.connect(host='localhost', user=db_name, password=db_password)
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         print("Filling Databse from file: " + path)
         with conn.cursor() as cursor:
