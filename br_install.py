@@ -111,7 +111,7 @@ def setup_opennsa(setup_db=False):
     print("OpenNSA Instance Setup complete")
 
 def generate_ssl_cert():
-    command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out opennsa-selfsigned.crt']
+    command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
