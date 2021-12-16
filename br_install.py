@@ -80,6 +80,7 @@ def setup_opennsa(setup_db=False):
             commands =[
                     'create user '+db_user+';',
                     'create database '+db_name+';',
+                    'alter user '+db_user+' password 'opennsa';'
             ]
             for command in commands:
                 cursor.execute(command)
