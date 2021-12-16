@@ -81,17 +81,17 @@ def setup_opennsa(setup_db=False):
             commands =[
                     'create user '+db_user+';',
                     'create database '+db_name+';',
-                    'alter user '+db_user+' password '+db_password+';'
+                    'alter user '+db_user+' 'db_password';'
             ]
             for command in commands:
                 try:
                     cursor.execute(command)
                 except DuplicateObject as e:
                     conn.rollback()
-                    print(str(e) + 'Already Created')
+                    print(str(e))
                 except DuplicateDatabase as e:
                     conn.rollback()
-                    print('Database ' + str(e) + ' Already Created')
+                    print(str(e))
                 else:
                     conn.commit()
         cursor.close()
