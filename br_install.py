@@ -85,7 +85,7 @@ def setup_opennsa(setup_db=False):
             for command in commands:
                 try:
                     cursor.execute(command)
-                except psycopg2.IntegrityError:
+                except psycopg2.errors.DuplicateObject:
                     conn.rollback()
         conn.commit()
         cursor.close()
