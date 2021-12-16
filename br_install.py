@@ -3,7 +3,7 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys, pwd, grp
-from constants import db_user, db_name, default_path
+from constants import db_user, db_name, db_password, default_path
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -80,7 +80,7 @@ def setup_opennsa(setup_db=False):
             commands =[
                     'create user '+db_user+';',
                     'create database '+db_name+';',
-                    'alter user '+db_user+' password 'opennsa';'
+                    'alter user '+db_user+' password '+db_password+';'
             ]
             for command in commands:
                 cursor.execute(command)
@@ -88,7 +88,6 @@ def setup_opennsa(setup_db=False):
         cursor.close()
         conn.close()
         print('Database created')
-
         path = default_path
         schema_path = input("Please specify the ENTIRE path to the schema.sql file (leave blank for default path)")
         if os.path.isfile(schema_path):
@@ -204,5 +203,6 @@ if args.nsa:
         
     print("\n\nInstallation Complete!")
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use\ndir='opennsa3'\n\n")
+    print('\n ALERT: It is up to the user to secure the Database after creation. Passwords used for creation are too simple for production')
 if args.update:
     update()
