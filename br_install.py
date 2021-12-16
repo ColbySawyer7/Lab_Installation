@@ -87,10 +87,13 @@ def setup_opennsa(setup_db=False):
                 try:
                     cursor.execute(command)
                 except DuplicateObject as e:
+                    cursor.rollback()
                     print(str(e) + 'Already Created')
                 except DuplicateDatabase as e:
+                    cursor.rollback()
                     print('Database ' + str(e) + ' Already Created')
-        conn.commit()
+                else:
+                    conn.commit()
         cursor.close()
         conn.close()
         print('Database created')
