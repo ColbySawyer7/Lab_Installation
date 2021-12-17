@@ -3,7 +3,7 @@
 #Prereqg: Git
 #-h or --help for assistance
 import argparse, subprocess, os, sys, pwd, grp
-from constants import db_user, db_name, db_password, default_path
+from constants import db_user, db_name, db_password, default_path, apps_dir
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
@@ -18,6 +18,8 @@ parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installatio
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
+parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Install GVS and its dependencies')
+parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 args = parser.parse_args()
 
@@ -99,15 +101,16 @@ def setup_opennsa(setup_db=False):
         cursor.close()
         conn.close()
         print('Database created')
-        path = default_path
-        schema_path = input("Please specify the ENTIRE path to the schema.sql file (leave blank for default path)")
-        if os.path.isfile(schema_path):
-            if schema_path[-3] == 'sql':
-                path = schema_path
 
+        path = default_path
         #Connect to new OpenNSA DB and fill from SQL file
         conn = psycopg2.connect(host='localhost', user=db_name, password=db_password)
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+
+        # Verify PostGreSQL is 12.0.0+
+        if conn.server_version < 120000:
+            print("ERROR: You are using an outdated version of Postgres (Postgres 12+ is required)")
+
         print("Filling Databse from file: " + path)
         with conn.cursor() as cursor:
             cursor.execute(open(path, "r").read())
@@ -140,14 +143,15 @@ def generate_ssl_cert():
     commands = [
         ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
         ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
+        ['sudo','rm','-r', 'opennsa-selfsigned.key'],
+        ['sudo','rm','-r', 'opennsa-selfsigned.crt'],
     ]
     for command in commands:
         stanout = subprocess.run(command)
         if stanout.stdout is not None:
             print(stanout.stdout)
 
-#OpenVPN
-if args.vpn:
+def configure_openvpn():
     #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     #install(['openvpn', 'easy-rsa'])
@@ -160,12 +164,14 @@ if args.vpn:
         print(stanout.stdout)
     print("Installation Complete!")
     print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
-#OpenNSA
-if args.nsa:
+
+def configure_opennsa():
     #Clone OpenNSA (From Geant Gitlab)
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
-    os.chdir('..')
+    lab_install_dir = os.getcwd()
+    source_loc=apps_dir + 'opennsa3'
+    os.chdir(apps_dir)
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
         print(stanout.stdout)
@@ -180,8 +186,7 @@ if args.nsa:
 
     install('python3-dev')
     install('libpq-dev')
-    #PostGreSQL Install
-    install('postgresql')
+
     #Pip dependencies Install
     pip_install()
     install('python3-bcrypt')
@@ -196,7 +201,7 @@ if args.nsa:
         setup_opennsa()
 
     # Certification Creation 
-    reply = str(input("\nWould you like to generate a self-singed certification? (y/n): ")).lower().strip()
+    reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
     if reply[0] == 'y':
         generate_ssl_cert()
         
@@ -204,19 +209,57 @@ if args.nsa:
     #gid = grp.getgrnam("nogroup").gr_gid
     #uid = pwd.getpwnam("opennsa").pw_uid
     #os.chown('keys', uid, gid)
+
     print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
     
     reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
+    tac_loc = source_loc + '/datafiles/opennsa.tac'
     if reply[0] == 'y':
-        command = ['twistd', '-yn', 'opennsa.tac']
+        stanout = subprocess.run(['twistd', '-yn', tac_loc])
+        if stanout.stdout is not None:
+            print(stanout.stdout)
     else:
         #Navigate back to Lab Installation dir 
-        os.chdir('..')
-        os.chdir('Lab_Installation')
+        os.chdir(lab_install_dir)
     
     print("\n\nInstallation Complete!")
-    
+    print('Source Code Location:' + source_loc)
     print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use \ndir=\'opennsa3\'")
-    print('\n ALERT: It is up to the user to secure the Database after creation. Passwords used for creation are too simple for production')
+    print('\nALERT: It is up to the user to secure the Database after creation. Passwords used for creation are too simple for production')
+
+def configure_gvs():
+    #TODO: Verify token file is present (otherwise this will fail)
+    print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
+    lab_install_dir = os.getcwd()
+    source_loc = apps_dir + '/GVS'
+
+    repoURL = 'https://github.com/jwsobieski/GVS.git'
+    os.chdir(apps_dir)
+    stanout = subprocess.run(['git', 'clone', repoURL])
+    if stanout.stdout is not None:
+        print(stanout.stdout)
+
+    #Navigate back to Lab Installation dir 
+    os.chdir(lab_install_dir)
+    
+    print("\n\nInstallation Complete!")
+    print('Source Code Location:' + source_loc)
+
+#OpenVPN
+if args.vpn:
+    configure_openvpn()
+#OpenNSA
+if args.nsa:
+    configure_opennsa()
+#GVS
+if args.gvs:
+    configure_gvs()
+#All
+if args.all:
+    configure_openvpn()
+    configure_opennsa()
+    configure_gvs()
+    print('Installation Successful')
+#Update
 if args.update:
     update()
