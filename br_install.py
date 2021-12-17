@@ -14,10 +14,6 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     sys.exit(1)
 
 # Menu Build
-print('**************************************************************************************************************************************************')
-print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
-print('**************************************************************************************************************************************************')
-
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
@@ -26,6 +22,12 @@ parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Insta
 parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 args = parser.parse_args()
+
+
+def display_security_warn():
+    print('**************************************************************************************************************************************************')
+    print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+    print('**************************************************************************************************************************************************')
 
 #Update Method for Lab Script
 def update():
@@ -170,6 +172,7 @@ def configure_openvpn():
     print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
 
 def configure_opennsa():
+    display_security_warn()
     #Clone OpenNSA (From Geant Gitlab)
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
