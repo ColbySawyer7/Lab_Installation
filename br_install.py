@@ -236,7 +236,8 @@ def configure_opennsa():
 
 def configure_gvs():
     #TODO: Verify token file is present (otherwise this will fail)
-    if gvs_token is not None:
+    isString = isinstance(gvs_token,str)
+    if gvs_token is not None and isString:
         print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
         lab_install_dir = os.getcwd()
         source_loc = apps_dir + '/GVS'
@@ -253,7 +254,7 @@ def configure_gvs():
         
         print("\n\nInstallation Complete!")
         print('Source Code Location:' + source_loc)
-    elif not isinstance(gvs_token, str):
+    elif not isString:
         print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
     else:
         print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
