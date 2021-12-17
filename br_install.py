@@ -170,7 +170,7 @@ def configure_opennsa():
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
     repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
     lab_install_dir = os.getcwd()
-    source_loc=apps_dir + 'opennsa3'
+    source_loc=apps_dir + '/opennsa3'
     os.chdir(apps_dir)
     stanout = subprocess.run(['git', 'clone', repoURL])
     if stanout.stdout is not None:
