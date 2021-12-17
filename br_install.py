@@ -244,10 +244,18 @@ def configure_gvs():
 
         repoURL = 'https://github.com/jwsobieski/GVS.git'
         repoURL = 'ColbySawyer7:' + gvs_token + repoURL
-        os.chdir(apps_dir)
-        stanout = subprocess.run(['git', 'clone', repoURL])
-        if stanout.stdout is not None:
-            print(stanout.stdout)
+
+        if os.path.isdir(apps_dir + '/GVS'):
+            print('GVS Source exists, pulling most recent version now')
+            os.chdir(apps_dir + '/GVS')
+            stanout = subprocess.run(['git', 'pull', repoURL])
+            if stanout.stdout is not None:
+                print(stanout.stdout)
+        else:
+            os.chdir(apps_dir)
+            stanout = subprocess.run(['git', 'clone', repoURL])
+            if stanout.stdout is not None:
+                print(stanout.stdout)
 
         #Navigate back to Lab Installation dir 
         os.chdir(lab_install_dir)
