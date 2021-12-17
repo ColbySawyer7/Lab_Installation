@@ -242,8 +242,8 @@ def configure_gvs():
         lab_install_dir = os.getcwd()
         source_loc = apps_dir + '/GVS'
 
-        repoURL = 'https://github.com/jwsobieski/GVS.git'
-        repoURL = 'ColbySawyer7:' + gvs_token + repoURL
+        repoURL = '@github.com/jwsobieski/GVS.git'
+        repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
 
         if os.path.isdir(apps_dir + '/GVS'):
             print('GVS Source exists, pulling most recent version now')
