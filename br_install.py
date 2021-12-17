@@ -14,7 +14,7 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     sys.exit(1)
 
 # Menu Build
-parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
+parser = argparse.ArgumentParser(description="*************************************************\nWelcome to the BRIDGES Installation Helper Script\n*************************************************")
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
