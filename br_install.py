@@ -14,7 +14,10 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     sys.exit(1)
 
 # Menu Build
-print('\nALERT: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+print('**************************************************************************************************************************************************')
+print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+print('**************************************************************************************************************************************************')
+
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
