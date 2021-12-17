@@ -14,6 +14,7 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     sys.exit(1)
 
 # Menu Build
+print('\nALERT: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
@@ -224,8 +225,6 @@ def configure_opennsa():
     
     print("\n\nInstallation Complete!")
     print('Source Code Location:' + source_loc)
-    print("\nNote: OpenNSA is its own directory and you must navigate back to the parent directory to find it for futher use \ndir=\'opennsa3\'")
-    print('\nALERT: It is up to the user to secure the Database after creation. Passwords used for creation are too simple for production')
 
 def configure_gvs():
     #TODO: Verify token file is present (otherwise this will fail)
