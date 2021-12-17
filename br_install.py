@@ -4,6 +4,8 @@
 #-h or --help for assistance
 import argparse, subprocess, os, sys, pwd, grp
 from constants import db_user, db_name, db_password, default_path, apps_dir
+from key import gvs_token
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
@@ -234,21 +236,27 @@ def configure_opennsa():
 
 def configure_gvs():
     #TODO: Verify token file is present (otherwise this will fail)
-    print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
-    lab_install_dir = os.getcwd()
-    source_loc = apps_dir + '/GVS'
+    if gvs_token is not None:
+        print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
+        lab_install_dir = os.getcwd()
+        source_loc = apps_dir + '/GVS'
 
-    repoURL = 'https://github.com/jwsobieski/GVS.git'
-    os.chdir(apps_dir)
-    stanout = subprocess.run(['git', 'clone', repoURL])
-    if stanout.stdout is not None:
-        print(stanout.stdout)
+        repoURL = 'https://github.com/jwsobieski/GVS.git'
+        repoURL = 'ColbySawyer7:' + gvs_token + repoURL
+        os.chdir(apps_dir)
+        stanout = subprocess.run(['git', 'clone', repoURL])
+        if stanout.stdout is not None:
+            print(stanout.stdout)
 
-    #Navigate back to Lab Installation dir 
-    os.chdir(lab_install_dir)
-    
-    print("\n\nInstallation Complete!")
-    print('Source Code Location:' + source_loc)
+        #Navigate back to Lab Installation dir 
+        os.chdir(lab_install_dir)
+        
+        print("\n\nInstallation Complete!")
+        print('Source Code Location:' + source_loc)
+    elif not isinstance(gvs_token, str):
+        print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
+    else:
+        print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
 
 #OpenVPN
 if args.vpn:
