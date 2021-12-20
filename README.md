@@ -33,3 +33,13 @@ OR
 
   python3 br_install.py --nsa
   
+### Installting GVS
+
+#### Prereq:
+  A token must be generated from an authenticated user to access GVS as it is a private. Use the key.py to store the proper access token. 
+
+  python3 br_install.py -g
+  
+OR
+
+  python3 br_install.py --gvs
