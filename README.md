@@ -27,6 +27,9 @@ OR
   
 ### Installting OpenNSA
 
+### Prereq:
+  To use a more secure database authentication pair make sure to change the values in constants.py
+
   python3 br_install.py -n
   
 OR

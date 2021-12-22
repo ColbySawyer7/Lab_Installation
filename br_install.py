@@ -1,7 +1,6 @@
 #Installation Script for BRIDGES Lab
-#Note: OpenNSA is installed in the working dir parent. We dont not yet support specifying dir for OpenNSA
-#Prereqg: Git
 #-h or --help for assistance
+
 import argparse, subprocess, os, sys, pwd, grp
 from constants import db_user, db_name, db_password, default_path, apps_dir
 from key import gvs_token
@@ -10,12 +9,18 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
+#//=========================================
+#   Python Version Verification
+#//=========================================
 if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
     print("This script requires Python 3.0 or higher!")
     print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
     sys.exit(1)
+#//=========================================
 
-# Menu Build
+#//=========================================
+#   Application Menu
+#//=========================================
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
@@ -24,26 +29,46 @@ parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Insta
 parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 args = parser.parse_args()
+#//=========================================
 
-
+#//=========================================
 def display_security_warn():
+    """Displays Warning for insecure default database paramters
+        Intended to be displayed upon initial use of tool
+    """
     print('**************************************************************************************************************************************************')
     print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
     print('**************************************************************************************************************************************************')
+#//=========================================
 
-#Update Method for Lab Script
+#//=========================================
 def update():
+    """Performs 'Update' of Script source. Pulls down the latest from git
+
+        Assumptions:
+            Working Directory is Lab_Installation
+    """
     stanout = subprocess.run(['git', 'pull'])
     if stanout.stdout is not None:
         print(stanout.stdout)
     print("Update Complete!")
+#//=========================================
 
+#//=========================================
 def verify_pip():
+    """Verifies the installatin of Python3 package manager
+    """
     # Verify Pip is installed
     pip_cmd = "sudo apt install python3-pip"
     os.system(pip_cmd)
+#//=========================================
 
+#//=========================================
 def verify_python3():
+    """Verify that the proper Python version is installed and used.
+        
+        **Depreciated: Newer methodology used to verify proper python versioning
+    """
     python3_command = ['sudo', 'apt', 'install', 'python3']
     python_remove_command = ['sudo', 'apt', 'purge', 'python']
     python_redirect_command = ['sudo' ,'ln' ,'-s' ,'/usr/bin/python3' ,'/usr/bin/python']
@@ -60,27 +85,41 @@ def verify_python3():
         print(stanout.stdout)
   
     print("Python Version Verified")
+#//=========================================
 
-# Pip Dependency Helper func
-# **package must be String
+#//=========================================
 def pip_install():
+    """Helper function that stores the default install command for using pip
+
+        Requirements:
+            Updated requirements.txt file. Packages not listed will not be included
+    """
     command = ["sudo", "pip", "install","-r", "requirements.txt"]
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
+#//=========================================
 
-# Standard Package Installer 
-# **package must be String
+#//=========================================
 def install(package):
+    """Helper Function that stores the default install command for using the linux package manager
+
+    Args:
+        package (String): [package manager recognized name for the package intended to be installed]
+    """
     command = ['sudo', 'apt', 'install'] + [package]
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
         print(stanout.stdout)
+#//=========================================
 
-# OpenNSA Setup Procedure
-# args setup_db boolean: True will configure and fill database
+#//=========================================
 def setup_opennsa(setup_db=False):
+    """OpenNSA Setup procedure. Manages the database setup (optional) and the generation of an SSL certificate
 
+    Args:
+        setup_db (bool, optional): [Specifies if the database configuration is to be included in the procedure]. Defaults to False (database untouched).
+    """
     os.chdir('../opennsa3')
 
     if setup_db:
@@ -136,9 +175,15 @@ def setup_opennsa(setup_db=False):
         print(stanout.stdout)
 
     print("OpenNSA Instance Setup complete")
+#//=========================================
 
-#Generate SSL certificate for OpenNSA test environment
+#//=========================================
 def generate_ssl_cert():
+    """Generates a basic SSL certificate. 
+
+        Requirements:
+            OpenSSL must be installed prior (This should be standard to intended Ubuntu environments)
+    """
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None:
@@ -158,8 +203,12 @@ def generate_ssl_cert():
         stanout = subprocess.run(command)
         if stanout.stdout is not None:
             print(stanout.stdout)
+#//=========================================
 
+#//=========================================
 def configure_openvpn():
+    """Uses the OpenVPN Road Warrior Install (external open source project) to install and setup OpenVPN
+    """
     #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     #install(['openvpn', 'easy-rsa'])
@@ -172,8 +221,12 @@ def configure_openvpn():
         print(stanout.stdout)
     print("Installation Complete!")
     print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
+#//=========================================
 
+#//=========================================
 def configure_opennsa():
+    """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
+    """
     display_security_warn()
     #Clone OpenNSA (From Geant Gitlab)
     print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
@@ -188,7 +241,7 @@ def configure_opennsa():
     os.chdir('opennsa3')
 
     # Install Dependencies
-    verify_python3()
+    #verify_python3()
     verify_pip()
 
     print('Installing OpenNSA Dependencies...\n')
@@ -233,8 +286,15 @@ def configure_opennsa():
     
     print("\n\nInstallation Complete!")
     print('Source Code Location:' + source_loc)
-
+#//=========================================
+ 
+#//=========================================
 def configure_gvs():
+    """GVS Installation. 
+
+        Assumptions:
+            Proper token is specified in teh key.py file
+    """
     #TODO: Verify token file is present (otherwise this will fail)
     isString = isinstance(gvs_token,str)
     if gvs_token is not None and isString:
@@ -266,7 +326,11 @@ def configure_gvs():
         print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
     else:
         print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
+#//=========================================
 
+#//=========================================
+#   Main Driving Code
+#//=========================================
 #OpenVPN
 if args.vpn:
     configure_openvpn()
@@ -285,3 +349,4 @@ if args.all:
 #Update
 if args.update:
     update()
+#//=========================================
