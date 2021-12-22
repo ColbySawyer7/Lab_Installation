@@ -51,7 +51,6 @@ def display_security_warn():
     print('**************************************************************************************************************************************************')
 #//=========================================
 
-#TODO: Fix issue with wrong dir
 #//=========================================
 def update():
     """Performs 'Update' of Script source. Pulls down the latest from git
@@ -70,7 +69,10 @@ def verify_pip():
     """Verifies the installatin of Python3 package manager
     """
     # Verify Pip is installed
-    pip_cmd = "sudo apt install python3-pip"
+    if verbose:
+        pip_cmd = "sudo apt install python3-pip"
+    else:
+        pip_cmd = "sudo apt -q install python3-pip"
     os.system(pip_cmd)
 #//=========================================
 
@@ -349,13 +351,11 @@ def configure_gvs():
 #//=========================================
 #   Main Driving Code
 #//=========================================
-
 #OpenVPN
 if args.vpn:
     configure_openvpn()
 #OpenNSA
 if args.nsa:
-    print()
     configure_opennsa()
 #GVS
 if args.gvs:
