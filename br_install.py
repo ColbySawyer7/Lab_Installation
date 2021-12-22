@@ -1,7 +1,7 @@
 #Installation Script for BRIDGES Lab
 #-h or --help for assistance
 
-import argparse, subprocess, os, sys, pwd, grp
+import argparse, subprocess, os, sys
 from constants import db_user, db_name, db_password, default_path, apps_dir
 from key import gvs_token
 
@@ -22,13 +22,23 @@ if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
 #   Application Menu
 #//=========================================
 parser = argparse.ArgumentParser(description="Welcome to the BRIDGES Installation Helper Script")
+
 options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
 parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Install GVS and its dependencies')
 parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
+
+volume = parser.add_mutually_exclusive_group()
+parser_quiet = volume.add_argument('-q','--quiet', action='store_true', help='Quiet usage') 
+
 args = parser.parse_args()
+
+verbose = True
+if args.quiet:
+    verbose = False
+
 #//=========================================
 
 #//=========================================
@@ -49,7 +59,7 @@ def update():
             Working Directory is Lab_Installation
     """
     stanout = subprocess.run(['git', 'pull'])
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
     print("Update Complete!")
 #//=========================================
@@ -73,15 +83,15 @@ def verify_python3():
     python_remove_command = ['sudo', 'apt', 'purge', 'python']
     python_redirect_command = ['sudo' ,'ln' ,'-s' ,'/usr/bin/python3' ,'/usr/bin/python']
     stanout = subprocess.run(python_remove_command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
     stanout = subprocess.run(python3_command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
     stanout = subprocess.run(python_redirect_command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
   
     print("Python Version Verified")
@@ -96,7 +106,7 @@ def pip_install():
     """
     command = ["sudo", "pip", "install","-r", "requirements.txt"]
     stanout = subprocess.run(command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 #//=========================================
 
@@ -109,7 +119,7 @@ def install(package):
     """
     command = ['sudo', 'apt', 'install'] + [package]
     stanout = subprocess.run(command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 #//=========================================
 
@@ -167,11 +177,11 @@ def setup_opennsa(setup_db=False):
             print('Database filled from file' + path)
 
     stanout = subprocess.run(['python', 'setup.py', 'build'])
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
     stanout = subprocess.run(['sudo', 'python', 'setup.py', 'install'])
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
     print("OpenNSA Instance Setup complete")
@@ -186,7 +196,7 @@ def generate_ssl_cert():
     """
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
     
     if not os.path.exists('keys'):
@@ -201,7 +211,7 @@ def generate_ssl_cert():
     ]
     for command in commands:
         stanout = subprocess.run(command)
-        if stanout.stdout is not None:
+        if stanout.stdout is not None and verbose:
             print(stanout.stdout)
 #//=========================================
 
@@ -217,7 +227,7 @@ def configure_openvpn():
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
     stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
     print("Installation Complete!")
     print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
@@ -235,7 +245,7 @@ def configure_opennsa():
     source_loc=apps_dir + '/opennsa3'
     os.chdir(apps_dir)
     stanout = subprocess.run(['git', 'clone', repoURL])
-    if stanout.stdout is not None:
+    if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
     os.chdir('opennsa3')
@@ -278,7 +288,7 @@ def configure_opennsa():
     tac_loc = source_loc + '/datafiles/opennsa.tac'
     if reply[0] == 'y':
         stanout = subprocess.run(['twistd', '-yn', tac_loc])
-        if stanout.stdout is not None:
+        if stanout.stdout is not None and verbose:
             print(stanout.stdout)
     else:
         #Navigate back to Lab Installation dir 
@@ -309,12 +319,12 @@ def configure_gvs():
             print('GVS Source exists, pulling most recent version now')
             os.chdir(apps_dir + '/GVS')
             stanout = subprocess.run(['git', 'pull', repoURL])
-            if stanout.stdout is not None:
+            if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
         else:
             os.chdir(apps_dir)
             stanout = subprocess.run(['git', 'clone', repoURL])
-            if stanout.stdout is not None:
+            if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
 
         #Navigate back to Lab Installation dir 
@@ -331,6 +341,7 @@ def configure_gvs():
 #//=========================================
 #   Main Driving Code
 #//=========================================
+
 #OpenVPN
 if args.vpn:
     configure_openvpn()
