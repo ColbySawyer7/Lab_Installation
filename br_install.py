@@ -104,7 +104,11 @@ def pip_install():
         Requirements:
             Updated requirements.txt file. Packages not listed will not be included
     """
-    command = ["sudo", "pip", "install","-r", "requirements.txt"]
+    if verbose:
+        command = ["sudo", "pip", "install","-r", "requirements.txt"]
+    else:
+        command = ["sudo", "pip", "install", "-q", "-r", "requirements.txt"]
+
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
@@ -117,7 +121,10 @@ def install(package):
     Args:
         package (String): [package manager recognized name for the package intended to be installed]
     """
-    command = ['sudo', 'apt', 'install'] + [package]
+    if verbose:
+        command = ['sudo', 'apt', 'install'] + [package]
+    else:
+        command = ['sudo', 'apt', '-q', 'install'] + [package]
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
@@ -347,6 +354,7 @@ if args.vpn:
     configure_openvpn()
 #OpenNSA
 if args.nsa:
+    print()
     configure_opennsa()
 #GVS
 if args.gvs:
