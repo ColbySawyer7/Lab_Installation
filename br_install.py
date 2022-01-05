@@ -27,11 +27,11 @@ options = parser.add_mutually_exclusive_group()
 parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Install OpenVPN and its dependencies')
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
 parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Install GVS and its dependencies')
-parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
+#parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 
 volume = parser.add_mutually_exclusive_group()
-parser_quiet = volume.add_argument('-q','--quiet', action='store_true', help='Quiet usage') 
+#parser_quiet = volume.add_argument('-q','--quiet', action='store_true', help='Quiet usage') 
 
 args = parser.parse_args()
 
