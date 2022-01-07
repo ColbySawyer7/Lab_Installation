@@ -5,10 +5,14 @@ Automated python installed for various necessary BRIDGES infrastructure software
 Git provides the simplest way to pull the code to any device (REQ: Linux)
 
 Command:
-
-  git pull https://github.com/ColbySawyer7/Lab_Installation.git
+    git pull https://github.com/ColbySawyer7/Lab_Installation.git
  
 ## Usage
+
+### Instace Specific Information
+To update parameters for your specific instance please refer to the constants.py file. You can make your changes
+here prior to configuration to properly secure and personlize the application instances.
+
 ### General Help
 
   python3 br_install.py -h
