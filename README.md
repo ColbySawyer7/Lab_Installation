@@ -14,9 +14,9 @@ To update parameters for your specific instance please refer to the constants.py
 here prior to configuration to properly secure and personlize the application instances.
 
 ### General Help
-
+''''
   python3 br_install.py -h
-  
+''''
 OR
 
   python3 br_install.py --help
