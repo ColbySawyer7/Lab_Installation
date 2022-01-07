@@ -4,7 +4,6 @@ Automated python installed for various necessary BRIDGES infrastructure software
 ## Installation
 Git provides the simplest way to pull the code to any device (REQ: Linux)
 
-Command:
     git pull https://github.com/ColbySawyer7/Lab_Installation.git
  
 ## Usage
@@ -14,39 +13,37 @@ To update parameters for your specific instance please refer to the constants.py
 here prior to configuration to properly secure and personlize the application instances.
 
 ### General Help
-''''
-  python3 br_install.py -h
-''''
-OR
-
-  python3 br_install.py --help
+    python3 br_install.py --help
   
-### Installing OpenVPN
- 
-  python3 br_install.py -v
-  
-OR
+<details><summary>Installing OpenVPN</summary>
+<p>
 
-  python3 br_install.py --vpn
-  
-### Installting OpenNSA
+    python3 br_install.py -v
+    OR
+    python3 br_install.py --vpn
 
-### Prereq:
-  To use a more secure database authentication pair make sure to change the values in constants.py
+</p>
+</details>
 
-  python3 br_install.py -n
-  
-OR
+<details><summary>Installing OpenNSA</summary>
+<p>
+ Prereq: To use a more secure database authentication pair make sure to change the values in constants.py
 
-  python3 br_install.py --nsa
-  
-### Installting GVS
+    python3 br_install.py -n
+    OR
+    python3 br_install.py --nsa
 
-#### Prereq:
-  A token must be generated from an authenticated user to access GVS as it is a private. Use the key.py to store the proper access token. 
+</p>
+</details>
 
-  python3 br_install.py -g
-  
-OR
 
-  python3 br_install.py --gvs
+<details><summary>Installing GVS</summary>
+<p>
+Prereq: A token must be generated from an authenticated user to access GVS as it is a private. Use the key.py to store the proper access token. 
+
+    python3 br_install.py -g
+    OR
+    python3 br_install.py --gvs
+
+</p>
+</details>
