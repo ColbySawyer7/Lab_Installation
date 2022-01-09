@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
-from toolkit import *
+from .toolkit import *
 
-def main():
+def start_gui():
     sg.theme('light grey')
     BLUE_BUTTON_COLOR = '#FFFFFF on #2196f2'
     GREEN_BUTTON_COLOR ='#FFFFFF on #00c851'
@@ -31,6 +31,3 @@ def main():
             configure_gvs()
         elif event == 'Update':
             update()
-
-if __name__ == '__main__':
-    main()

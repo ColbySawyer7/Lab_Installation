@@ -1,25 +1,12 @@
-#Installation Script for BRIDGES Lab
-#-h or --help for assistance
-
 import argparse, subprocess, os, sys
-from constants import db_user, db_name, db_password, default_path, apps_dir
-from key import gvs_token
+from utils.constants import db_user, db_name, db_password, default_path, apps_dir
+from utils.key import gvs_token
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
 verbose = True
-#//=========================================
-#   Python Version Verification
-#//=========================================
-if not (sys.version_info.major == 3 and sys.version_info.minor >= 0):
-    print("This script requires Python 3.0 or higher!")
-    print("You are using Python {}.{}.".format(sys.version_info.major, sys.version_info.minor))
-    sys.exit(1)
-#//=========================================
-
-#//=========================================
 
 #//=========================================
 def display_security_warn():
