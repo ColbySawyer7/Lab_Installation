@@ -23,7 +23,7 @@ parser_vpn = options.add_argument('-v', '--vpn', action='store_true', help='Inst
 parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Install OpenNSA and its dependencies')
 parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Install GVS and its dependencies')
 parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
-parser_gui = options.add_argument('-i', '-interface', action='store_true', help='Start the Lab Installation tools GUI')
+parser_interface = options.add_argument('-i', '--interface', action='store_true', help='Start the Lab Installation tools GUI')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
 
 volume = parser.add_mutually_exclusive_group()
@@ -53,7 +53,7 @@ if args.all:
     configure_gvs()
     print('Installation Successful')
 #GUI
-if args.gui:
+if args.interface:
     install('python3-tk')
     start_gui()
 #Update
