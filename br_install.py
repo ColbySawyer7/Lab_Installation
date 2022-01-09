@@ -2,6 +2,8 @@
 #-h or --help for assistance
 
 import argparse, subprocess, os, sys
+
+from pywebio.platform.tornado_http import start_server
 from constants import db_user, db_name, db_password, default_path, apps_dir
 from key import gvs_token
 
@@ -9,6 +11,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
+from app import start_gui
 #//=========================================
 #   Python Version Verification
 #//=========================================
@@ -29,7 +32,7 @@ parser_nsa = options.add_argument('-n','--nsa', action='store_true', help='Insta
 parser_gvs = options.add_argument('-g','--gvs', action='store_true', help='Install GVS and its dependencies')
 parser_all = options.add_argument('-a','--all', action='store_true', help='Install All and their dependencies')
 parser_update = options.add_argument('-u','--update', action='store_true', help='Update installation helper')
-
+parser_interface = options.add_argument('-i', '--interface', action='store_true', help='Run User Interface default=localhost:8080')
 volume = parser.add_mutually_exclusive_group()
 parser_quiet = volume.add_argument('-q','--quiet', action='store_true', help='Quiet usage') 
 
@@ -369,4 +372,12 @@ if args.all:
 #Update
 if args.update:
     update()
+#User Inteface
+if args.interface:
+    custom_port = input('What port would you like the GUI to run? (8080):\t')
+    if custom_port:
+        start_server(start_gui, port=int(custom_port))
+    else:
+        start_server(start_gui, port=8080)
+
 #//=========================================
