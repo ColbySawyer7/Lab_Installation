@@ -1,5 +1,5 @@
 import argparse, subprocess, os, sys
-from key import gvs_token
+from .key import gvs_token
 
 import PySimpleGUI as sg
 
