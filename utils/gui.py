@@ -3,7 +3,7 @@ from toolkit import *
 from os import path
 
 SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-', 'theme': '-THEME-'}
-SETTINGS_FILE_LOCATION = 'utils/config.ini'
+from constants import SETTINGS_FILE_LOCATION
 
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
@@ -94,4 +94,5 @@ def start_gui():
                 window.close()
                 start_gui()
 
-start_gui()
+# TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
+# start_gui()

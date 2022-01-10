@@ -1,0 +1,1 @@
+SETTINGS_FILE_LOCATION = 'utils/config.ini'

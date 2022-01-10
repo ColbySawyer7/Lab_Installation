@@ -3,7 +3,7 @@ from key import gvs_token
 
 import PySimpleGUI as sg
 
-SETTINGS_FILE_LOCATION = 'utils/config.ini'
+from constants import SETTINGS_FILE_LOCATION
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
 db_user = settings['Main']['db_user']
