@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from toolkit import *
+from .toolkit import *
 from os import path, times_result
 
 SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-', 'theme': '-THEME-'}
