@@ -5,6 +5,7 @@ import PySimpleGUI as sg
 
 SETTINGS_FILE_LOCATION = 'utils/config.ini'
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
+
 db_user = settings['Main']['db_user']
 db_name = settings['Main']['db_name']
 db_password = settings['Main']['db_password']
