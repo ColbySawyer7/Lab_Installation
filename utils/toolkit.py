@@ -1,6 +1,16 @@
 import argparse, subprocess, os, sys
-from utils.constants import db_user, db_name, db_password, default_path, apps_dir
-from utils.key import gvs_token
+from key import gvs_token
+
+import PySimpleGUI as sg
+
+SETTINGS_FILE_LOCATION = 'utils/config.ini'
+settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
+db_user = settings['Main']['db_user']
+db_name = settings['Main']['db_name']
+db_password = settings['Main']['db_password']
+default_path = settings['Main']['default_path']
+apps_dir = settings['Main']['apss_dir']
+
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -25,6 +35,7 @@ def update():
         Assumptions:
             Working Directory is Lab_Installation
     """
+    #TODO: Sync with GUI to dispay a loading bar
     stanout = subprocess.run(['git', 'pull'])
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
