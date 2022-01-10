@@ -12,8 +12,7 @@ Git provides the simplest way to pull the code to any device (REQ: Linux)
 ## Usage
 
 ### Instance Specific Information
-To update parameters for your specific instance please refer to the constants.py file. You can make your changes
-here prior to configuration to properly secure and personlize the application instances.
+To update parameters for your specific instance please refer to the UPDATE.md (Recommended for security if not using GUI)
 
 ### General Help
     python3 br_install.py --help
