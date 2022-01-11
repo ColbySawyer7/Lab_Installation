@@ -1,17 +1,21 @@
 import PySimpleGUI as sg
 from toolkit import *
-from os import path, times_result
+from os import path
 
 SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-','gvs_token':'-TOKEN-', 'theme': '-THEME-'}
-from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON
+from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON, BRIDGES_ICON
 
+#Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
 def dependency_window():
+    """Dependency Checking Menu
+    """
     sg.theme(settings['Main']['theme'])
     status = ''
     key_status = validate_gvs_key()
 
+    #TODO: Actually validate these items
     selected_icon = WARNING_ICON
     if status == 'comp':
         selected_icon = GREEN_CHECK_ICON
@@ -53,6 +57,12 @@ def dependency_window():
     window.close()
 
 def settings_window():
+    """Settings menu for the GUI. 
+        Allows users to fully manipulate the config.ini file. Returns boolean based on state of changes
+
+    Returns:
+        [bool]: [Holds if any settings have been changed (TRUE is settings changed). This is vital to submitting the changes to the main!]
+    """
     sg.theme(settings['Main']['theme'])
     change = False
     status = None
@@ -103,6 +113,8 @@ def settings_window():
     return change
 
 def start_gui():
+    """Main Menu for the GUI, Starts the menu
+    """
     sg.theme(settings['Main']['theme'])
 
     layout = [[sg.Text('Main Menu', font='Any 15')],
@@ -115,7 +127,7 @@ def start_gui():
             [sg.B('Settings', size=(40,2), button_color=DARK_GRAY_BUTTON_COLOR)],
             [sg.B('Exit', size=(40,2), button_color=LIGHT_GRAY_BUTTON_COLOR)],], element_justification='c', vertical_alignment='c', expand_x=True,expand_y=True)]]
 
-    window = sg.Window('BRIDGES Lab Installation', layout, resizable=True, size=(400,400), icon='assets/bridges.jpg')
+    window = sg.Window('BRIDGES Lab Installation', layout, resizable=True, size=(400,400), icon=BRIDGES_ICON)
 
 
     while True:             # Event Loop
@@ -143,4 +155,4 @@ def start_gui():
                 start_gui()
 
 # TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
-start_gui()
+#start_gui()

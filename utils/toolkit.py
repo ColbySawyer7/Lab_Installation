@@ -2,8 +2,11 @@ import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
 from constants import SETTINGS_FILE_LOCATION
+
+#Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
+#Takes parameters from configuration file. This assumes this file is intact.
 db_user = settings['Main']['db_user']
 db_name = settings['Main']['db_name']
 db_password = settings['Main']['db_password']
@@ -19,6 +22,9 @@ verbose = True
 
 #//=========================================
 def validate_gvs_key():
+    """Validates the gvs_token provided in the config.ini file.
+        Used primarily to alert the user of an error.
+    """
     try:
         if gvs_token is not None:
             if len(gvs_token) < 39:
@@ -219,6 +225,8 @@ def generate_ssl_cert():
 #//=========================================
 def configure_openvpn(gui_enabled=False):
     """Uses the OpenVPN Road Warrior Install (external open source project) to install and setup OpenVPN
+    Args:
+        gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
     #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
@@ -247,6 +255,8 @@ def configure_openvpn(gui_enabled=False):
 #//=========================================
 def configure_opennsa(gui_enabled=False):
     """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
+    Args:
+        gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
     if gui_enabled:
         # This is the normal print that comes with simple GUI
@@ -328,6 +338,8 @@ def configure_gvs(gui_enabled=False):
 
         Assumptions:
             Proper token is specified in teh key.py file
+    Args:
+        gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
     if gui_enabled:
         # This is the normal print that comes with simple GUI
