@@ -22,11 +22,17 @@ verbose = True
 #//=========================================
 def validate_gvs_key():
     try:
-        print('Validating Key')
+        if gvs_token is not None:
+            if len(gvs_token) < 39:
+                print('ERROR: provided key is too short')
+            else:
+                return
+        else:
+            print('ERROR: key file is empty. You MUST fill this out')
     except Exception as e:
         print('ERROR: ' + str(e))
 #//=========================================
-     
+
 #//=========================================
 def display_security_warn():
     """Displays Warning for insecure default database paramters

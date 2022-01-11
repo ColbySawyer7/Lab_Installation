@@ -142,4 +142,4 @@ def start_gui():
                 start_gui()
 
 # TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
-start_gui()
+#start_gui()
