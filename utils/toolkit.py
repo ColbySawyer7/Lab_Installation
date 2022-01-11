@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
