@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from toolkit import *
 from os import path, times_result
 
-SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-', 'theme': '-THEME-'}
+SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-','gvs_token':'-TOKEN-', 'theme': '-THEME-'}
 from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON
 
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
@@ -66,6 +66,7 @@ def settings_window():
                 [TextLabel('DB Name'), sg.Input(key='-DB NAME-')],
                 [TextLabel('DB Password'), sg.Input(key='-DB PSWD-')],
                 [TextLabel('Path to Schema'),sg.Input(key='-PATH-'), sg.FolderBrowse(target='-PATH-', initial_folder=str(settings['Main'][str('default_path')]))],
+                [TextLabel('GVS Token'), sg.Input(key='-TOKEN-')],
                 [sg.Text('Installer', font='Any 10')],
                 [TextLabel('Theme'),sg.Combo(sg.theme_list(), size=(20, 20), key='-THEME-')],
                 [sg.Button('Save'), sg.Button('Exit')]  ]
@@ -142,4 +143,4 @@ def start_gui():
                 start_gui()
 
 # TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
-#start_gui()
+start_gui()

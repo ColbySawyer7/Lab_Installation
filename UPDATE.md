@@ -18,5 +18,6 @@ More Information on the current parameters available in the configuration file:
 |db_name| Specifies the database name to be used for the PostGreSQL database) Primarily for the OpenNSA required database|opennsa | 
 |db_password| Specifies the database password to be used for the PostGreSQL database) Primarily for the OpenNSA required database| opennsa | SECURITY WARNING**
 |default_path| The path to the OpenNSA database schema file| opennsa/datafiles/schema.sql | This shouldnt change, OpenNSA manages this file |
-|apps_dir| The path where all the application sources will be installed | /usr/local | 
+|apps_dir| The path where all the application sources will be installed | /usr/local |
+|gvs_token| The token used to pull down the secured source code from Git| | | 
 |theme| GUI specific parameter, it is recommended you only change this in the GUI settings|Python | 

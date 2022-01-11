@@ -47,7 +47,7 @@ See example below:
 
 <details><summary>Installing OpenNSA</summary>
 <p>
- Prereq: To use a more secure database authentication pair make sure to change the values in constants.py
+ Prereq: To use a more secure database authentication pair make sure to change the values detailed in UPDATE.md.
 
     python3 br_install.py -n
     OR
@@ -59,7 +59,7 @@ See example below:
 
 <details><summary>Installing GVS</summary>
 <p>
-Prereq: A token must be generated from an authenticated user to access GVS as it is a private. Use the key.py to store the proper access token. 
+Prereq: A token must be generated from an authenticated user to access GVS as it is a private. Follow the UPDATE.md for more information. 
 
     python3 br_install.py -g
     OR

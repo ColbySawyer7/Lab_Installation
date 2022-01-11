@@ -1,6 +1,4 @@
 import argparse, subprocess, os, sys
-from key import gvs_token
-
 import PySimpleGUI as sg
 
 from constants import SETTINGS_FILE_LOCATION
@@ -10,8 +8,8 @@ db_user = settings['Main']['db_user']
 db_name = settings['Main']['db_name']
 db_password = settings['Main']['db_password']
 default_path = settings['Main']['default_path']
-apps_dir = settings['Main']['apss_dir']
-
+apps_dir = settings['Main']['apps_dir']
+gvs_token = settings['Main']['gvs_token']
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
