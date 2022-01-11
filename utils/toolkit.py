@@ -66,10 +66,16 @@ def validate_postgres():
 #//=========================================
 
 #//=========================================
-def display_security_warn():
+def display_security_warn(gui_enabled=False):
     """Displays Warning for insecure default database paramters
         Intended to be displayed upon initial use of tool
     """
+    if gui_enabled:
+        # This is the normal print that comes with simple GUI
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
+
+        # this is clobbering the print command, and replacing it with sg's Print()
+        print = sg.Print
     print('****************************************************************************')
     print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
     print('****************************************************************************')
@@ -299,7 +305,7 @@ def configure_opennsa(gui_enabled=False):
         # this is clobbering the print command, and replacing it with sg's Print()
         print = sg.Print
 
-    display_security_warn()
+    display_security_warn(gui_enabled)
     #Clone OpenNSA (From Geant Gitlab)
     print('\n\n***************************************************************************')
     print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
