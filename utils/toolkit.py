@@ -261,7 +261,7 @@ def configure_openvpn(gui_enabled=False):
         # This is the normal print that comes with simple GUI
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
         try: 
-            stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
+            stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 sg.Print(stanout.stdout)
             sg.Print("Installation Complete!")
@@ -270,7 +270,7 @@ def configure_openvpn(gui_enabled=False):
             sg.Print('ERROR:\t' + str(e))
     else:
         try: 
-            stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
+            stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
             print("Installation Complete!")
