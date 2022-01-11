@@ -270,7 +270,7 @@ def configure_openvpn(gui_enabled=False):
             sg.Print('ERROR:\t' + str(e))
     else:
         try: 
-            stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
+            stanout = subprocess.run(['sudo', 'bash', '/utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
             print("Installation Complete!")
