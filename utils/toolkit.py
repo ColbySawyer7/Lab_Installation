@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function as print
 
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
@@ -290,75 +290,75 @@ def configure_opennsa(gui_enabled=False):
 
         # this is clobbering the print command, and replacing it with sg's Print()
         print = sg.Print
+    else:
+        print('****************************************************************************')
+        print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+        print('****************************************************************************')
 
-    print('****************************************************************************')
-    print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
-    print('****************************************************************************')
+        #Clone OpenNSA (From Geant Gitlab)
+        print('\n\n***************************************************************************')
+        print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
+        print('****************************************************************************')
 
-    #Clone OpenNSA (From Geant Gitlab)
-    print('\n\n***************************************************************************')
-    print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
-    print('****************************************************************************')
-
-    try:
-        repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
-        lab_install_dir = os.getcwd()
-        source_loc=apps_dir + '/opennsa3'
-        os.chdir(apps_dir)
-        stanout = subprocess.run(['git', 'clone', repoURL])
-        if stanout.stdout is not None and verbose:
-            print(stanout.stdout)
-
-        os.chdir('opennsa3')
-
-        # Install Dependencies
-        #verify_python3()
-        verify_pip()
-
-        print('Installing OpenNSA Dependencies...\n')
-
-        install('python3-dev')
-        install('libpq-dev')
-
-        #Pip dependencies Install
-        pip_install()
-        install('python3-bcrypt')
-
-        # OpenNSA Configuration
-        print("\n\nOpenNSA Configuration Starting ...")
-
-        reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
-        if reply[0] == 'y':
-            setup_opennsa(setup_db=True)
-        else:
-            setup_opennsa()
-
-        # Certification Creation 
-        reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
-        if reply[0] == 'y':
-            generate_ssl_cert()
-            
-        # Change ownership for certs to Opennsa user only.
-        #gid = grp.getgrnam("nogroup").gr_gid
-        #uid = pwd.getpwnam("opennsa").pw_uid
-        #os.chown('keys', uid, gid)
-
-        print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
-        
-        reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
-        tac_loc = source_loc + '/datafiles/opennsa.tac'
-        if reply[0] == 'y':
-            stanout = subprocess.run(['twistd', '-yn', tac_loc])
+        try:
+            repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
+            lab_install_dir = os.getcwd()
+            source_loc=apps_dir + '/opennsa3'
+            os.chdir(apps_dir)
+            stanout = subprocess.run(['git', 'clone', repoURL])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
-        else:
-            #Navigate back to Lab Installation dir 
-            os.chdir(lab_install_dir)
-        
-        print("\n\nInstallation Complete!")
-        print('Source Code Location:' + source_loc)
-    except Exception as e:
-        print('ERROR:\t' + str(e))
+
+            os.chdir('opennsa3')
+
+            # Install Dependencies
+            #verify_python3()
+            verify_pip()
+
+            print('Installing OpenNSA Dependencies...\n')
+
+            install('python3-dev')
+            install('libpq-dev')
+
+            #Pip dependencies Install
+            pip_install()
+            install('python3-bcrypt')
+
+            # OpenNSA Configuration
+            print("\n\nOpenNSA Configuration Starting ...")
+
+            reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+            if reply[0] == 'y':
+                setup_opennsa(setup_db=True)
+            else:
+                setup_opennsa()
+
+            # Certification Creation 
+            reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
+            if reply[0] == 'y':
+                generate_ssl_cert()
+                
+            # Change ownership for certs to Opennsa user only.
+            #gid = grp.getgrnam("nogroup").gr_gid
+            #uid = pwd.getpwnam("opennsa").pw_uid
+            #os.chown('keys', uid, gid)
+
+            print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+            
+            reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
+            tac_loc = source_loc + '/datafiles/opennsa.tac'
+            if reply[0] == 'y':
+                stanout = subprocess.run(['twistd', '-yn', tac_loc])
+                if stanout.stdout is not None and verbose:
+                    print(stanout.stdout)
+            else:
+                #Navigate back to Lab Installation dir 
+                os.chdir(lab_install_dir)
+            
+            print("\n\nInstallation Complete!")
+            print('Source Code Location:' + source_loc)
+        except Exception as e:
+            print('ERROR:\t' + str(e))
 #//=========================================
  
 #//=========================================
