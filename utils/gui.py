@@ -7,41 +7,37 @@ from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTT
 
 #Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
+#//=========================================
+def get_depen_status(postgres=False, gvs_token=False):
+    status = None
+    if postgres:
+        status = validate_postgres()
+    elif gvs_token:
+        status = validate_gvs_key()
 
+    if status:
+        selected_icon = GREEN_CHECK_ICON
+        status_message = "Depedency is in compliance"
+    elif status is None:
+        selected_icon = WARNING_ICON
+        status_message = "Unable to determine compliance of dependency at this time"
+    elif not status :
+        selected_icon = RED_X_ICON
+        status_message = "ERROR: dependency is in NOT compliance."
+
+    status = [status_message, selected_icon]
+    return status
+#//=========================================
+
+#//=========================================
 def dependency_window():
     """Dependency Checking Menu
     """
     sg.theme(settings['Main']['theme'])
-    status = ''
-    key_status = validate_gvs_key()
-
-    #TODO: Actually validate these items
-    selected_icon = WARNING_ICON
-    if status == 'comp':
-        selected_icon = GREEN_CHECK_ICON
-        status_message = "Depedency is in compliance"
-    elif status == 'noncomp':
-        selected_icon = RED_X_ICON
-        status_message = "ERROR: dependency is in NOT compliance; this will prevent the application from running"
-    else:
-        selected_icon = WARNING_ICON
-        status_message = "Unable to determine compliance of dependency at this time"
-
-    selected_gvs_icon = WARNING_ICON
-    if status == 'comp':
-        selected_gvs_icon = GREEN_CHECK_ICON
-        status_message = "Depedency is in compliance"
-    elif status == 'noncomp':
-        selected_gvs_icon = RED_X_ICON
-        status_message = "ERROR: dependency is in NOT compliance; this will prevent the application from running"
-    else:
-        selected_gvs_icon = WARNING_ICON
-        status_message = "Unable to determine compliance of dependency at this time"
-
 
     layout = [  [sg.Text('Dependencies', font='Any 15')],
-                [sg.Text('PostGreSQL 12.0+', font = 'Any 12') ,sg.Button('0', image_data=selected_icon, button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
-                [sg.Text('GVS Key file', font = 'Any 12') ,sg.Button('1', image_data=selected_gvs_icon, button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
+                [sg.Text('PostGreSQL 12.0+', font = 'Any 12') ,sg.Button('', image_data=get_depen_status(postgres=True)[1], button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
+                [sg.Text('GVS Key file', font = 'Any 12') ,sg.Button(' ', image_data=get_depen_status(gvs_token=True)[1], button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
                 [sg.Text('', key='-STATUS-', font='Any 10')],
                 [sg.Button('Exit')]]
 
@@ -51,11 +47,15 @@ def dependency_window():
         event, values = window.read(timeout=100)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        elif event == '0' or event == '1':
-            window['-STATUS-'].update(value=status_message)
+        elif event == '':
+            window['-STATUS-'].update(value=get_depen_status(postgres=True)[0])
+        elif event == ' ':
+            window['-STATUS-'].update(value=get_depen_status(gvs_token=True)[0])
     
     window.close()
+#//=========================================
 
+#//=========================================
 def settings_window():
     """Settings menu for the GUI. 
         Allows users to fully manipulate the config.ini file. Returns boolean based on state of changes
@@ -111,7 +111,9 @@ def settings_window():
         sg.popup(status)
 
     return change
+#//=========================================
 
+#//=========================================
 def start_gui():
     """Main Menu for the GUI, Starts the menu
     """
@@ -153,6 +155,7 @@ def start_gui():
             if theme_change:
                 window.close()
                 start_gui()
+#//=========================================
 
 # TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
-#start_gui()
+start_gui()

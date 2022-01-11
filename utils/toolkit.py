@@ -3,38 +3,62 @@ import PySimpleGUI as sg
 
 from constants import SETTINGS_FILE_LOCATION
 
-#Load settings from file
-settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
-
-#Takes parameters from configuration file. This assumes this file is intact.
-db_user = settings['Main']['db_user']
-db_name = settings['Main']['db_name']
-db_password = settings['Main']['db_password']
-default_path = settings['Main']['default_path']
-apps_dir = settings['Main']['apps_dir']
-gvs_token = settings['Main']['gvs_token']
-
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
+
 verbose = True
+#//=========================================
+def reload_settings():
+    """[summary]
+
+    Returns:
+        [multiple]: [Returns entire settings parameters in following order: db_user, db_name, db_password, default_path, apps_dir, gvs_token]
+    """
+    #Load settings from file
+    settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
+
+    #Takes parameters from configuration file. This assumes this file is intact.
+    db_user = settings['Main']['db_user']
+    db_name = settings['Main']['db_name']
+    db_password = settings['Main']['db_password']
+    default_path = settings['Main']['default_path']
+    apps_dir = settings['Main']['apps_dir']
+    gvs_token = settings['Main']['gvs_token']
+
+    return db_user, db_name, db_password, default_path, apps_dir, gvs_token
+#//=========================================
 
 #//=========================================
 def validate_gvs_key():
     """Validates the gvs_token provided in the config.ini file.
         Used primarily to alert the user of an error.
+
+    Returns:
+        [bool]: [False if non compliant. True is compliant]
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+
     try:
         if gvs_token is not None:
-            if len(gvs_token) < 39:
+            if len(gvs_token) < 40:
                 print('ERROR: provided key is too short')
+                return False
             else:
-                return
+                return True
         else:
             print('ERROR: key file is empty. You MUST fill this out')
+            return False
     except Exception as e:
         print('ERROR: ' + str(e))
+        return False
+#//=========================================
+
+#//=========================================
+def validate_postgres():
+    #TODO: COMPLETE THIS FUNC
+    return None
 #//=========================================
 
 #//=========================================
@@ -137,6 +161,8 @@ def setup_opennsa(setup_db=False):
     Args:
         setup_db (bool, optional): [Specifies if the database configuration is to be included in the procedure]. Defaults to False (database untouched).
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+
     os.chdir('../opennsa3')
 
     if setup_db:
@@ -228,6 +254,8 @@ def configure_openvpn(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+
     #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
     #install(['openvpn', 'easy-rsa'])
@@ -258,6 +286,8 @@ def configure_opennsa(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+
     if gui_enabled:
         # This is the normal print that comes with simple GUI
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
@@ -341,6 +371,8 @@ def configure_gvs(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+
     if gui_enabled:
         # This is the normal print that comes with simple GUI
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
