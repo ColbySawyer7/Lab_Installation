@@ -1,15 +1,16 @@
 import PySimpleGUI as sg
-from .toolkit import *
+from toolkit import *
 from os import path, times_result
 
 SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-', 'theme': '-THEME-'}
-from .constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON
+from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON
 
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
 def dependency_window():
     sg.theme(settings['Main']['theme'])
     status = ''
+    key_status = validate_gvs_key()
 
     selected_icon = WARNING_ICON
     if status == 'comp':
@@ -22,18 +23,31 @@ def dependency_window():
         selected_icon = WARNING_ICON
         status_message = "Unable to determine compliance of dependency at this time"
 
+    selected_gvs_icon = WARNING_ICON
+    if status == 'comp':
+        selected_gvs_icon = GREEN_CHECK_ICON
+        status_message = "Depedency is in compliance"
+    elif status == 'noncomp':
+        selected_gvs_icon = RED_X_ICON
+        status_message = "ERROR: dependency is in NOT compliance; this will prevent the application from running"
+    else:
+        selected_gvs_icon = WARNING_ICON
+        status_message = "Unable to determine compliance of dependency at this time"
+
+
     layout = [  [sg.Text('Dependencies', font='Any 15')],
-                [sg.Text('PostGreSQL 12.0+', font = 'Any 12') ,sg.Button('', image_data=selected_icon, button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
+                [sg.Text('PostGreSQL 12.0+', font = 'Any 12') ,sg.Button('0', image_data=selected_icon, button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
+                [sg.Text('GVS Key file', font = 'Any 12') ,sg.Button('1', image_data=selected_gvs_icon, button_color=(sg.theme_background_color(),sg.theme_background_color()), border_width=0)],
                 [sg.Text('', key='-STATUS-', font='Any 10')],
                 [sg.Button('Exit')]]
 
-    window = sg.Window('Dependency Helper', layout,size=(400,175), keep_on_top=True, finalize=True)
+    window = sg.Window('Dependency Helper', layout,size=(400,225), keep_on_top=True, finalize=True)
 
     while True:             # Event Loop
         event, values = window.read(timeout=100)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        elif event == '':
+        elif event == '0' or event == '1':
             window['-STATUS-'].update(value=status_message)
     
     window.close()
@@ -46,12 +60,12 @@ def settings_window():
     def TextLabel(text): return sg.Text(text+':', justification='r', size=(15,1))
 
     layout = [  [sg.Text('Settings', font='Any 15')],
-                [TextLabel('Main Apps Directory'), sg.Input(key='-APPS DIR-'), sg.FolderBrowse(target='-APPS DIR-')],
+                [TextLabel('Main Apps Directory'), sg.Input(key='-APPS DIR-'), sg.FolderBrowse(target='-APPS DIR-', initial_folder=str(settings['Main'][str('apps_dir')]))],
                 [sg.Text('OpenNSA', font = 'Any 10')],
                 [TextLabel('DB Username'), sg.Input(key='-DB USER-')],
                 [TextLabel('DB Name'), sg.Input(key='-DB NAME-')],
                 [TextLabel('DB Password'), sg.Input(key='-DB PSWD-')],
-                [TextLabel('Path to Schema'),sg.Input(key='-PATH-'), sg.FolderBrowse(target='-PATH-')],
+                [TextLabel('Path to Schema'),sg.Input(key='-PATH-'), sg.FolderBrowse(target='-PATH-', initial_folder=str(settings['Main'][str('default_path')]))],
                 [sg.Text('Installer', font='Any 10')],
                 [TextLabel('Theme'),sg.Combo(sg.theme_list(), size=(20, 20), key='-THEME-')],
                 [sg.Button('Save'), sg.Button('Exit')]  ]
@@ -102,6 +116,7 @@ def start_gui():
 
     window = sg.Window('BRIDGES Lab Installation', layout, resizable=True, size=(400,400), icon='assets/bridges.jpg')
 
+
     while True:             # Event Loop
         event, values = window.read(timeout=100)
         if event == sg.WIN_CLOSED or event == 'Exit':
@@ -109,13 +124,16 @@ def start_gui():
         elif event == 'Dependency Helper':
             dependency_window()
         elif event == 'OpenNSA Installation':
-            configure_opennsa()
+            configure_opennsa(gui_enabled=True)
         elif event == 'OpenVPN Installation and Configuration':
-            configure_openvpn()
+            configure_openvpn(gui_enabled=True)
         elif event == 'GVS Installation':
-            configure_gvs()
+            configure_gvs(gui_enabled=True)
         elif event == 'Update':
-            update()
+            try:
+                update()
+            except Exception as e:
+                sg.popup('ERROR: ' + str(e))
             sg.popup('Up to date!')
         elif event == 'Settings':
             theme_change = settings_window()
@@ -124,4 +142,4 @@ def start_gui():
                 start_gui()
 
 # TESTING HELPER (UNCOMMENT TO TEST GUI ONLY)
-#start_gui()
+start_gui()

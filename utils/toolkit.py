@@ -1,9 +1,9 @@
 import argparse, subprocess, os, sys
-from .key import gvs_token
+from key import gvs_token
 
 import PySimpleGUI as sg
 
-from .constants import SETTINGS_FILE_LOCATION
+from constants import SETTINGS_FILE_LOCATION
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
 
 db_user = settings['Main']['db_user']
@@ -20,13 +20,21 @@ from psycopg2.errors import DuplicateObject, DuplicateDatabase
 verbose = True
 
 #//=========================================
+def validate_gvs_key():
+    try:
+        print('Validating Key')
+    except Exception as e:
+        print('ERROR: ' + str(e))
+#//=========================================
+     
+#//=========================================
 def display_security_warn():
     """Displays Warning for insecure default database paramters
         Intended to be displayed upon initial use of tool
     """
-    print('**************************************************************************************************************************************************')
+    print('****************************************************************************')
     print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
-    print('**************************************************************************************************************************************************')
+    print('****************************************************************************')
 #//=========================================
 
 #//=========================================
@@ -205,7 +213,7 @@ def generate_ssl_cert():
 #//=========================================
 
 #//=========================================
-def configure_openvpn():
+def configure_openvpn(gui_enabled=False):
     """Uses the OpenVPN Road Warrior Install (external open source project) to install and setup OpenVPN
     """
     #Hard Code Install
@@ -215,114 +223,150 @@ def configure_openvpn():
     #OpenVPN Road Warrior Install
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
-    stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
-    if stanout.stdout is not None and verbose:
-        print(stanout.stdout)
-    print("Installation Complete!")
-    print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
-#//=========================================
+    if gui_enabled:
+        # This is the normal print that comes with simple GUI
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
 
-#//=========================================
-def configure_opennsa():
-    """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
-    """
-    display_security_warn()
-    #Clone OpenNSA (From Geant Gitlab)
-    print('Installing OpenNSA...\n\nThis may take a minute, Please wait for entire process to complete\n')
-    repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
-    lab_install_dir = os.getcwd()
-    source_loc=apps_dir + '/opennsa3'
-    os.chdir(apps_dir)
-    stanout = subprocess.run(['git', 'clone', repoURL])
-    if stanout.stdout is not None and verbose:
-        print(stanout.stdout)
+        # this is clobbering the print command, and replacing it with sg's Print()
+        print = sg.Print
 
-    os.chdir('opennsa3')
-
-    # Install Dependencies
-    #verify_python3()
-    verify_pip()
-
-    print('Installing OpenNSA Dependencies...\n')
-
-    install('python3-dev')
-    install('libpq-dev')
-
-    #Pip dependencies Install
-    pip_install()
-    install('python3-bcrypt')
-
-    # OpenNSA Configuration
-    print("\n\nOpenNSA Configuration Starting ...")
-
-    reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
-    if reply[0] == 'y':
-        setup_opennsa(True)
-    else:
-        setup_opennsa()
-
-    # Certification Creation 
-    reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
-    if reply[0] == 'y':
-        generate_ssl_cert()
-        
-    # Change ownership for certs to Opennsa user only.
-    #gid = grp.getgrnam("nogroup").gr_gid
-    #uid = pwd.getpwnam("opennsa").pw_uid
-    #os.chown('keys', uid, gid)
-
-    print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
-    
-    reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
-    tac_loc = source_loc + '/datafiles/opennsa.tac'
-    if reply[0] == 'y':
-        stanout = subprocess.run(['twistd', '-yn', tac_loc])
+    try: 
+        stanout = subprocess.run(['sudo', 'bash', 'openvpn-install.sh'])
         if stanout.stdout is not None and verbose:
             print(stanout.stdout)
-    else:
-        #Navigate back to Lab Installation dir 
-        os.chdir(lab_install_dir)
-    
-    print("\n\nInstallation Complete!")
-    print('Source Code Location:' + source_loc)
+        print("Installation Complete!")
+        print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
+    except Exception as e:
+        print('ERROR:\t' + str(e))
+#//=========================================
+
+#//=========================================
+def configure_opennsa(gui_enabled=False):
+    """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
+    """
+    if gui_enabled:
+        # This is the normal print that comes with simple GUI
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
+
+        # this is clobbering the print command, and replacing it with sg's Print()
+        print = sg.Print
+
+    display_security_warn()
+    #Clone OpenNSA (From Geant Gitlab)
+    print('\n\n***************************************************************************')
+    print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
+    print('****************************************************************************')
+
+    try:
+        repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
+        lab_install_dir = os.getcwd()
+        source_loc=apps_dir + '/opennsa3'
+        os.chdir(apps_dir)
+        stanout = subprocess.run(['git', 'clone', repoURL])
+        if stanout.stdout is not None and verbose:
+            print(stanout.stdout)
+
+        os.chdir('opennsa3')
+
+        # Install Dependencies
+        #verify_python3()
+        verify_pip()
+
+        print('Installing OpenNSA Dependencies...\n')
+
+        install('python3-dev')
+        install('libpq-dev')
+
+        #Pip dependencies Install
+        pip_install()
+        install('python3-bcrypt')
+
+        # OpenNSA Configuration
+        print("\n\nOpenNSA Configuration Starting ...")
+
+        reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+        if reply[0] == 'y':
+            setup_opennsa(setup_db=True)
+        else:
+            setup_opennsa()
+
+        # Certification Creation 
+        reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
+        if reply[0] == 'y':
+            generate_ssl_cert()
+            
+        # Change ownership for certs to Opennsa user only.
+        #gid = grp.getgrnam("nogroup").gr_gid
+        #uid = pwd.getpwnam("opennsa").pw_uid
+        #os.chown('keys', uid, gid)
+
+        print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+        
+        reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
+        tac_loc = source_loc + '/datafiles/opennsa.tac'
+        if reply[0] == 'y':
+            stanout = subprocess.run(['twistd', '-yn', tac_loc])
+            if stanout.stdout is not None and verbose:
+                print(stanout.stdout)
+        else:
+            #Navigate back to Lab Installation dir 
+            os.chdir(lab_install_dir)
+        
+        print("\n\nInstallation Complete!")
+        print('Source Code Location:' + source_loc)
+    except Exception as e:
+        print('ERROR:\t' + str(e))
 #//=========================================
  
 #//=========================================
-def configure_gvs():
+def configure_gvs(gui_enabled=False):
     """GVS Installation. 
 
         Assumptions:
             Proper token is specified in teh key.py file
     """
-    #TODO: Verify token file is present (otherwise this will fail)
-    isString = isinstance(gvs_token,str)
-    if gvs_token is not None and isString:
-        print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
-        lab_install_dir = os.getcwd()
-        source_loc = apps_dir + '/GVS'
+    if gui_enabled:
+        # This is the normal print that comes with simple GUI
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
 
-        repoURL = '@github.com/jwsobieski/GVS.git'
-        repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
+        # this is clobbering the print command, and replacing it with sg's Print()
+        print = sg.Print
+    try:
+        if not validate_gvs_key():
+            print('ERROR: Unable to validate key.py file')
+            return
+            #Exception('ERROR: GVS Key file requires attention')
 
-        if os.path.isdir(apps_dir + '/GVS'):
-            print('GVS Source exists, pulling most recent version now')
-            os.chdir(apps_dir + '/GVS')
-            stanout = subprocess.run(['git', 'pull', repoURL])
-            if stanout.stdout is not None and verbose:
-                print(stanout.stdout)
+        isString = isinstance(gvs_token,str)
+        if gvs_token is not None and isString:
+            print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
+            lab_install_dir = os.getcwd()
+            source_loc = apps_dir + '/GVS'
+
+            repoURL = '@github.com/jwsobieski/GVS.git'
+            repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
+
+            if os.path.isdir(apps_dir + '/GVS'):
+                print('GVS Source exists, pulling most recent version now')
+                os.chdir(apps_dir + '/GVS')
+                stanout = subprocess.run(['git', 'pull', repoURL])
+                if stanout.stdout is not None and verbose:
+                    print(stanout.stdout)
+            else:
+                os.chdir(apps_dir)
+                stanout = subprocess.run(['git', 'clone', repoURL])
+                if stanout.stdout is not None and verbose:
+                    print(stanout.stdout)
+
+            #Navigate back to Lab Installation dir 
+            os.chdir(lab_install_dir)
+            
+            print("\n\nInstallation Complete!")
+            print('Source Code Location:' + source_loc)
+        elif not isString:
+            print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
         else:
-            os.chdir(apps_dir)
-            stanout = subprocess.run(['git', 'clone', repoURL])
-            if stanout.stdout is not None and verbose:
-                print(stanout.stdout)
-
-        #Navigate back to Lab Installation dir 
-        os.chdir(lab_install_dir)
-        
-        print("\n\nInstallation Complete!")
-        print('Source Code Location:' + source_loc)
-    elif not isString:
-        print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
-    else:
-        print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
+            print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
+    except Exception as e:
+        print('ERROR:\t' + str(e))
 #//=========================================
