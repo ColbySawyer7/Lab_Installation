@@ -31,14 +31,15 @@ def reload_settings():
 #//=========================================
 
 #//=========================================
-def validate_gvs_key():
+def validate_gvs_key(gvs_token=None):
     """Validates the gvs_token provided in the config.ini file.
         Used primarily to alert the user of an error.
 
     Returns:
         [bool]: [False if non compliant. True is compliant]
     """
-    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+    if gvs_token is None:
+        db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
 
     try:
         if gvs_token is not None:
