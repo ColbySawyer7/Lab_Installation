@@ -1,7 +1,7 @@
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
-from constants import SETTINGS_FILE_LOCATION
+from .constants import SETTINGS_FILE_LOCATION
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -32,8 +32,11 @@ def reload_settings():
 
 #//=========================================
 def validate_gvs_key(gvs_token=None):
-    """Validates the gvs_token provided in the config.ini file.
+    """ Validates the gvs_token provided in the config.ini file.
         Used primarily to alert the user of an error.
+
+    Args:
+        gvs_token ([String], optional): [String that represents a GVS token. Redirects validation from saved value to provided value]. Defaults to None.
 
     Returns:
         [bool]: [False if non compliant. True is compliant]
