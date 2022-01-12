@@ -7,6 +7,15 @@ from .constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUT
 
 #Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
+#//=========================================
+def get_gvs_input_window():
+    return
+#//=========================================
+
+#//=========================================
+def get_nsa_input_window():
+    return 
+#//=========================================
 
 #//=========================================
 def get_depen_status(postgres=False, gvs_token=False, show_popup=False):

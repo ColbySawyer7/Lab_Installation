@@ -258,12 +258,12 @@ def configure_openvpn(gui_enabled=False):
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
     if gui_enabled:
-        sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60)
+        sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60, keep_on_top=True)
         try: 
             stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout) 
-            sg.popup("To access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)", title='OVPN Successful')
+            sg.popup("To access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)", title='OVPN Successful', keep_on_top=True)
         except Exception as e:
             sg.popup('ERROR:\t' + str(e))
     else:
@@ -278,7 +278,7 @@ def configure_openvpn(gui_enabled=False):
 #//=========================================
 
 #//=========================================
-def configure_opennsa(gui_enabled=False):
+def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=False):
     """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
@@ -325,14 +325,14 @@ def configure_opennsa(gui_enabled=False):
             # OpenNSA Configuration
             sg.Print("\n\nOpenNSA Configuration Starting ...")
 
-            reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
+            reply = sg.popup_yes_no('Would you like for the database to be configured at this time? (y/n): ')
             if reply[0] == 'y':
                 setup_opennsa(setup_db=True)
             else:
                 setup_opennsa()
 
             # Certification Creation 
-            reply = str(input("\nWould you like to generate a self-signed certification? (y/n): ")).lower().strip()
+            reply = sg.popup_yes_no("\nWould you like to generate a self-signed certification? (y/n): ")
             if reply[0] == 'y':
                 generate_ssl_cert()
                 
@@ -342,7 +342,7 @@ def configure_opennsa(gui_enabled=False):
             #os.chown('keys', uid, gid)
 
             sg.Print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
-            
+            """
             reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
             tac_loc = source_loc + '/datafiles/opennsa.tac'
             if reply[0] == 'y':
@@ -352,7 +352,7 @@ def configure_opennsa(gui_enabled=False):
             else:
                 #Navigate back to Lab Installation dir 
                 os.chdir(lab_install_dir)
-            
+            """
             sg.Print("\n\nInstallation Complete!")
             sg.Print('Source Code Location:' + source_loc)
         except Exception as e:
