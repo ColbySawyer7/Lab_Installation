@@ -7,14 +7,13 @@ from .constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUT
 
 #Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)
-#//=========================================
-def get_gvs_input_window():
-    return
-#//=========================================
 
 #//=========================================
-def get_nsa_input_window():
-    return 
+def install_required_python():
+    sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
+    sg.Print('Installing Python Dependencies')
+    pip_install()
+    sg.Print('Complete!')
 #//=========================================
 
 #//=========================================
@@ -143,6 +142,7 @@ def start_gui():
             #[sg.B('OpenNSA Automatic Configuration', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
             [sg.B('OpenVPN Installation and Configuration', size=(butt_w,butt_h))],
             [sg.B('GVS Installation', size=(butt_w,butt_h))],
+            [sg.B('Install Required Python Libraries', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
             [sg.B('Dependency Helper', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
             [sg.B('Update', size=(butt_w,butt_h), button_color=GREEN_BUTTON_COLOR)],
             [sg.B('Settings', size=(butt_w,butt_h), button_color=DARK_GRAY_BUTTON_COLOR)],
@@ -157,6 +157,8 @@ def start_gui():
             break
         elif event == 'Dependency Helper':
             dependency_window()
+        elif event == 'Install Required Python Libraries':
+            install_required_python()
         elif event == 'OpenNSA Installation':
             configure_opennsa(gui_enabled=True)
         elif event == 'OpenVPN Installation and Configuration':

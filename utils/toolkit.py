@@ -123,9 +123,9 @@ def pip_install():
             Updated requirements.txt file. Packages not listed will not be included
     """
     if verbose:
-        command = ["sudo", "pip", "install","-r", "requirements.txt"]
+        command = ["sudo", "python3", "-m", "pip", "install","-r", "requirements.txt"]
     else:
-        command = ["sudo", "pip", "install", "-q", "-r", "requirements.txt"]
+        command = ["sudo", "python3", "-m", "pip", "install", "-q", "-r", "requirements.txt"]
 
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
@@ -278,7 +278,7 @@ def configure_openvpn(gui_enabled=False):
 #//=========================================
 
 #//=========================================
-def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=False):
+def configure_opennsa(gui_enabled=False):
     """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
