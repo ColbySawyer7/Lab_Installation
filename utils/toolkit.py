@@ -301,7 +301,7 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
         try:
             repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
             lab_install_dir = os.getcwd()
-            source_loc=apps_dir + '/opennsa3'
+            source_loc= str(apps_dir) + '/opennsa3'
             os.chdir(apps_dir)
             stanout = subprocess.run(['git', 'clone', repoURL])
             if stanout.stdout is not None and verbose:
@@ -330,7 +330,7 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
                 setup_opennsa(setup_db=True)
             else:
                 setup_opennsa()
-            mess = 'Would you like for the database to be configured at this time? (y/n): ' + str(reply)
+            mess = "Would you like for the database to be configured at this time? (y/n): " + str(reply)
             sg.Print(mess)
 
             # Certification Creation 
