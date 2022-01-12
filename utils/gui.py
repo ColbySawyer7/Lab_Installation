@@ -1,9 +1,9 @@
 import PySimpleGUI as sg
-from toolkit import *
+from .toolkit import *
 from os import path
 
 SETTINGS_KEYS_TO_ELEMENT_KEYS = {'apps_dir': '-APPS DIR-', 'postgres_pwd':'-PG PWD-', 'db_user': '-DB USER-', 'db_name': '-DB NAME-', 'db_password': '-DB PSWD-', 'default_path': '-PATH-','gvs_token':'-TOKEN-', 'theme': '-THEME-'}
-from constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON, INFO_ICON, BRIDGES_ICON
+from .constants import SETTINGS_FILE_LOCATION, GREEN_BUTTON_COLOR, DARK_GRAY_BUTTON_COLOR, LIGHT_GRAY_BUTTON_COLOR, BLUE_BUTTON_COLOR, GREEN_CHECK_ICON, WARNING_ICON, RED_X_ICON, INFO_ICON, BRIDGES_ICON
 
 #Load settings from file
 settings = sg.UserSettings(SETTINGS_FILE_LOCATION, use_config_file=True, convert_bools_and_none=True)

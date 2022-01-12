@@ -1,7 +1,7 @@
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
-from constants import SETTINGS_FILE_LOCATION
+from .constants import SETTINGS_FILE_LOCATION
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
