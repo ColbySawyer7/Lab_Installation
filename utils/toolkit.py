@@ -326,7 +326,7 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
             sg.Print("\n\nOpenNSA Configuration Starting ...")
 
             reply = sg.popup_yes_no('Would you like for the database to be configured at this time? (y/n): ')
-            if reply[0] == 'y':
+            if reply[0] == 'Y':
                 setup_opennsa(setup_db=True)
             else:
                 setup_opennsa()
@@ -335,7 +335,7 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
 
             # Certification Creation 
             reply = sg.popup_yes_no("Would you like to generate a self-signed certification? (y/n): ")
-            if reply[0] == 'y':
+            if reply[0] == 'Y':
                 generate_ssl_cert()
             mess = "Would you like to generate a self-signed certification? (y/n): " + str(reply)
             sg.Print(mess)
