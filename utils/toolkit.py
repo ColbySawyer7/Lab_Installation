@@ -221,6 +221,7 @@ def generate_ssl_cert():
         Requirements:
             OpenSSL must be installed prior (This should be standard to intended Ubuntu environments)
     """
+    sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60, keep_on_top=True)
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
