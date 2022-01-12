@@ -263,7 +263,7 @@ def configure_openvpn(gui_enabled=False):
             stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout) 
-            sg.popup("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)\n\n")
+            sg.popup("To access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)", title='OVPN Successful')
         except Exception as e:
             sg.popup('ERROR:\t' + str(e))
     else:
