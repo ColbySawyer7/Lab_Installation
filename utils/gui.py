@@ -56,7 +56,7 @@ def dependency_window():
                 [sg.Button('Exit')]
             ]
 
-    window = sg.Window('Dependency Helper', layout,size=(400,225), keep_on_top=True, finalize=True, resizeable=True)
+    window = sg.Window('Dependency Helper', layout,size=(400,225), keep_on_top=True, finalize=True, resizable=True)
 
     while True:             # Event Loop
         event, values = window.read(timeout=100)
@@ -98,7 +98,7 @@ def settings_window():
                 [TextLabel('Theme'),sg.Combo(sg.theme_list(), size=(20, 20), key='-THEME-'),sg.Button(image_data=INFO_ICON , tooltip='Theme of the entire GUI')],
                 [sg.Button('Save'), sg.Button('Exit')]  ]
 
-    window = sg.Window('Settings', layout, keep_on_top=True, finalize=True, resizeable=True)
+    window = sg.Window('Settings', layout, keep_on_top=True, finalize=True, resizable=True)
 
     for key in SETTINGS_KEYS_TO_ELEMENT_KEYS:   # update window with the values read from settings file
         try:
