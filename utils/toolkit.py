@@ -330,12 +330,15 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
                 setup_opennsa(setup_db=True)
             else:
                 setup_opennsa()
+            mess = 'Would you like for the database to be configured at this time? (y/n): ' + str(reply)
+            sg.Print(mess)
 
             # Certification Creation 
-            reply = sg.popup_yes_no("\nWould you like to generate a self-signed certification? (y/n): ")
+            reply = sg.popup_yes_no("Would you like to generate a self-signed certification? (y/n): ")
             if reply[0] == 'y':
                 generate_ssl_cert()
-                
+            mess = "Would you like to generate a self-signed certification? (y/n): " + str(reply)
+            sg.Print(mess)
             # Change ownership for certs to Opennsa user only.
             #gid = grp.getgrnam("nogroup").gr_gid
             #uid = pwd.getpwnam("opennsa").pw_uid
@@ -353,7 +356,7 @@ def configure_opennsa(gui_enabled=False,  db_config_bool=False, ssl_cert_bool=Fa
                 #Navigate back to Lab Installation dir 
                 os.chdir(lab_install_dir)
             """
-            sg.Print("\n\nInstallation Complete!")
+            sg.popup_timed("OpenNSA Installation Complete!", auto_close_duration=60)
             sg.Print('Source Code Location:' + source_loc)
         except Exception as e:
             sg.Print('ERROR:\t' + str(e))
