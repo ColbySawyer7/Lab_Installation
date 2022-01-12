@@ -67,3 +67,25 @@ Prereq: A token must be generated from an authenticated user to access GVS as it
 
 </p>
 </details>
+
+<details><summary>Creating Vitural Environment (Recommended)</summary>
+<p>
+
+#### Install Vituralenv
+
+    python3 -m pip install virtualenv
+
+#### Create Environment 
+
+    virtualenv [Virtual_Environment_Name]
+
+#### Activate Environment
+
+    source virtual_environments/[Virtual_Environment_Name]/bin/activate
+
+#### Install Python Packages for Tools
+
+    python3 -m pip install -r requirements.txt
+
+</p>
+</details>
