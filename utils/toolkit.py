@@ -242,6 +242,7 @@ def generate_ssl_cert():
             print(stanout.stdout)
 #//=========================================
 
+#TODO: See if parameterized calling of script is available (could incorporate into GUI)
 #//=========================================
 def configure_openvpn(gui_enabled=False):
     """Uses the OpenVPN Road Warrior Install (external open source project) to install and setup OpenVPN
@@ -476,7 +477,7 @@ def configure_gvs(gui_enabled=False):
                 #Navigate back to Lab Installation dir 
                 os.chdir(lab_install_dir)
                 
-                sg.Print("\n\nInstallation Complete!")
+                sg.popup_timed("Installation Complete!", auto_close_duration=60)
                 sg.Print('Source Code Location:' + source_loc)
             elif not isString:
                 sg.Print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
