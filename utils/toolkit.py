@@ -258,23 +258,21 @@ def configure_openvpn(gui_enabled=False):
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
     if gui_enabled:
-        # This is the normal print that comes with simple GUI
-        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
+        sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60)
         try: 
             stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
-                sg.Print(stanout.stdout)
-            sg.Print("Installation Complete!")
-            sg.Print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
+                print(stanout.stdout) 
+            sg.popup("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)\n\n")
         except Exception as e:
-            sg.Print('ERROR:\t' + str(e))
+            sg.popup('ERROR:\t' + str(e))
     else:
         try: 
             stanout = subprocess.run(['sudo', 'bash', '/utils/openvpn-install.sh'])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
             print("Installation Complete!")
-            print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .opvn file (stores vpn connection settings)\n\n")
+            print("\nTo access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)\n\n")
         except Exception as e:
             print('ERROR:\t' + str(e))
 #//=========================================
