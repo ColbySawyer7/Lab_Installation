@@ -42,15 +42,15 @@ if args.vpn:
     configure_openvpn()
 #OpenNSA
 if args.nsa:
-    configure_opennsa()
+    install_opennsa()
 #GVS
 if args.gvs:
-    configure_gvs()
+    install_gvs()
 #All
 if args.all:
     configure_openvpn()
-    configure_opennsa()
-    configure_gvs()
+    install_opennsa()
+    install_gvs()
     print('Installation Successful')
 #GUI
 if args.interface:

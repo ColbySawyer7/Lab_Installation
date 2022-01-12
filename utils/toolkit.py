@@ -1,7 +1,7 @@
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
-from .constants import SETTINGS_FILE_LOCATION
+from constants import SETTINGS_FILE_LOCATION
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -280,7 +280,7 @@ def configure_openvpn(gui_enabled=False):
 #//=========================================
 
 #//=========================================
-def configure_opennsa(gui_enabled=False):
+def install_opennsa(gui_enabled=False):
     """OpenNSA installation procedure. Verification of the correct dependencies followed by installation of the source. Calls the setup_opennsa on the users request
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
@@ -434,7 +434,7 @@ def configure_opennsa(gui_enabled=False):
 #//=========================================
  
 #//=========================================
-def configure_gvs(gui_enabled=False):
+def install_gvs(gui_enabled=False):
     """GVS Installation. 
 
         Assumptions:
