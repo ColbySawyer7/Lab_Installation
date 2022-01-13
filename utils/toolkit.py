@@ -139,10 +139,11 @@ def pip_install():
         Requirements:
             Updated requirements.txt file. Packages not listed will not be included
     """
+    requirements_loc = BR_MAIN_LOCATION + '/requirements.txt'
     if verbose:
-        command = ["sudo", "python3", "-m", "pip", "install","-r", "requirements.txt"]
+        command = ["sudo", "python3", "-m", "pip", "install","-r", requirements_loc]
     else:
-        command = ["sudo", "python3", "-m", "pip", "install", "-q", "-r", "requirements.txt"]
+        command = ["sudo", "python3", "-m", "pip", "install", "-q", "-r" , requirements_loc]
 
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
