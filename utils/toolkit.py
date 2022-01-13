@@ -75,7 +75,7 @@ def validate_postgres():
         version = conn.server_version
         print(version)
         conn.close()
-        if version < 120000 and version >= 130000:
+        if int(version) < 120000 and int(version) >= 130000:
             return False
         else:
             return True
