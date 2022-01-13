@@ -222,11 +222,11 @@ def setup_opennsa(setup_db=False):
             conn.close()
             print('Database filled from file' + path)
 
-    stanout = subprocess.run(['python', 'setup.py', 'build'])
+    stanout = subprocess.run(['python3', 'setup.py', 'build'])
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
-    stanout = subprocess.run(['sudo', 'python', 'setup.py', 'install'])
+    stanout = subprocess.run(['sudo', 'python3', 'setup.py', 'install'])
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
