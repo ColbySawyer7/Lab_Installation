@@ -176,7 +176,6 @@ def setup_opennsa(setup_db=False):
     db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     source_loc= str(apps_dir) + '/opennsa3'
-    os.chdir(source_loc)
 
     if setup_db:
         print("Database configuration starting")
@@ -222,11 +221,12 @@ def setup_opennsa(setup_db=False):
             conn.close()
             print('Database filled from file' + path)
 
-    stanout = subprocess.run(['python3', 'setup.py', 'build'])
+    setup_file_loc = source_loc + '/setup.py'
+    stanout = subprocess.run(['sudo', 'python3', setup_file_loc , 'build'])
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
-    stanout = subprocess.run(['sudo', 'python3', 'setup.py', 'install'])
+    stanout = subprocess.run(['sudo', 'python3', setup_file_loc , 'install'])
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
@@ -241,21 +241,34 @@ def generate_ssl_cert():
         Requirements:
             OpenSSL must be installed prior (This should be standard to intended Ubuntu environments)
     """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
+    source_loc= str(apps_dir) + '/opennsa3'
+
     sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60, keep_on_top=True)
     command = ['sudo', 'openssl', 'req', '-x509' ,'-nodes', '-days' ,'365', '-newkey','rsa:2048', '-keyout', 'opennsa-selfsigned.key', '-out', 'opennsa-selfsigned.crt']
     stanout = subprocess.run(command)
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
     
-    if not os.path.exists('keys'):
-            os.makedirs('keys')
-    if not os.path.exists('certs'):
-        os.makedirs('certs')
+    key_dir_dest = source_loc + '/keys'
+    crt_dir_dest = source_loc + '/certs'
+    
+    if not os.path.exists(key_dir_dest):
+        os.makedirs(key_dir_dest)
+    if not os.path.exists(crt_dir_dest):
+        os.makedirs(crt_dir_dest)
+
+    keys_file_loc = BR_MAIN_LOCATION + '/opennsa-selfsigned.key'
+    crt_file_loc = BR_MAIN_LOCATION + '/opennsa-selfsigned.crt'
+
+    keys_file_dest = str(source_loc) + 'keys/opennsa-selfsigned.key'
+    crt_file_dest = str(source_loc) + 'certs/opennsa-selfsigned.crt'
+
     commands = [
-        ['sudo','cp','opennsa-selfsigned.key', 'keys/opennsa-selfsigned.key'],
-        ['sudo','cp','opennsa-selfsigned.crt', 'certs/opennsa-selfsigned.crt'],
-        ['sudo','rm','-r', 'opennsa-selfsigned.key'],
-        ['sudo','rm','-r', 'opennsa-selfsigned.crt'],
+        ['sudo','cp', keys_file_loc, keys_file_dest],
+        ['sudo','cp', crt_file_loc, crt_file_dest],
+        ['sudo','rm','-r', keys_file_loc],
+        ['sudo','rm','-r', crt_file_loc],
     ]
     for command in commands:
         stanout = subprocess.run(command)
@@ -329,8 +342,6 @@ def install_opennsa(gui_enabled=False):
             if not os.path.isdir(source_loc):
                 Repo.clone_from(repoURL,apps_dir)
 
-            os.chdir(source_loc)
-
             # Install Dependencies
             #verify_python3()
             verify_pip()
@@ -369,26 +380,10 @@ def install_opennsa(gui_enabled=False):
             sg.Print(mess)
             sg.Print('****************************************************************************\n\n')
 
-            # Change ownership for certs to Opennsa user only.
-            #gid = grp.getgrnam("nogroup").gr_gid
-            #uid = pwd.getpwnam("opennsa").pw_uid
-            #os.chown('keys', uid, gid)
-
             sg.Print('****************************************************************************')
             sg.Print('**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
             sg.Print('****************************************************************************\n\n')
 
-            """
-            reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
-            tac_loc = source_loc + '/datafiles/opennsa.tac'
-            if reply[0] == 'y':
-                stanout = subprocess.run(['twistd', '-yn', tac_loc])
-                if stanout.stdout is not None and verbose:
-                    sg.Print(stanout.stdout)
-            else:
-                #Navigate back to Lab Installation dir 
-                os.chdir(lab_install_dir)
-            """
             sg.popup_timed("OpenNSA Installation Complete!", auto_close_duration=60)
             sg.Print('****************************************************************************')
             sg.Print('Source Code Location:' + source_loc, font='bold')
@@ -411,8 +406,6 @@ def install_opennsa(gui_enabled=False):
         try:
             if not os.path.isdir(source_loc):
                 Repo.clone_from(repoURL,apps_dir)
-
-            os.chdir(source_loc)
 
             # Install Dependencies
             #verify_python3()
@@ -445,10 +438,6 @@ def install_opennsa(gui_enabled=False):
             if reply[0] == 'y':
                 generate_ssl_cert()
                 
-            # Change ownership for certs to Opennsa user only.
-            #gid = grp.getgrnam("nogroup").gr_gid
-            #uid = pwd.getpwnam("opennsa").pw_uid
-            #os.chown('keys', uid, gid)
             print('****************************************************************************')
             print('**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
             print('****************************************************************************\n\n')
