@@ -77,7 +77,7 @@ def validate_postgres():
         if int(version) < 120000 and int(version) >= 130000:
             return False
         else:
-            print(version)
+            print(int(version))
             return True
     except Exception as e:
         sg.popup_timed('ERROR: Unable to establish connection with postgres locally. Check the given postgres password')
