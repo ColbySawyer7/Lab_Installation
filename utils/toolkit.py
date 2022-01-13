@@ -261,8 +261,8 @@ def generate_ssl_cert():
     keys_file_loc = BR_MAIN_LOCATION[:-17] + '/opennsa-selfsigned.key'
     crt_file_loc = BR_MAIN_LOCATION[:-17] + '/opennsa-selfsigned.crt'
 
-    keys_file_dest = str(source_loc) + 'keys/opennsa-selfsigned.key'
-    crt_file_dest = str(source_loc) + 'certs/opennsa-selfsigned.crt'
+    keys_file_dest = str(source_loc) + '/keys/opennsa-selfsigned.key'
+    crt_file_dest = str(source_loc) + '/certs/opennsa-selfsigned.crt'
 
     commands = [
         ['sudo','cp', keys_file_loc, keys_file_dest],
