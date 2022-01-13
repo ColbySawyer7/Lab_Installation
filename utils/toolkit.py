@@ -33,6 +33,44 @@ def reload_settings():
 #//=========================================
 
 #//=========================================
+def check_for_database(database_name, postgres_pwd):
+    database_list = []
+    conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+    with conn.cursor() as cursor:
+        try:
+            cursor.execute('SELECT datname FROM pg_database;')
+            database_list = cursor.fetchall()
+        except Exception as e:
+            print('ERROR: ' + str(e))
+    cursor.close()
+    conn.close()
+    if database_name in database_list:
+        return True
+    else:
+        return False
+#//=========================================
+
+#//=========================================
+def is_nsa_installed():
+    """Check to see if OpenNSA has been installed by checking for exsistence of source code, keys, certs, and database 
+
+    Returns:
+        [bool]: [True if OpenNSA has been installed, False if OpenNSA has not been installed]
+    """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
+    source_loc= str(apps_dir) + '/opennsa3'
+    #Check for Source
+    if os.path.isdir(source_loc):
+        #Check for Keys and Certs
+        if os.path.isdir(source_loc + '/certs') and os.path.isdir(source_loc + '/keys'):
+            #Check for Database
+            if check_for_database('opennsa', postgres_pwd):
+                return True
+    return False
+#//=========================================
+
+#//=========================================
 def validate_gvs_key(gvs_token=None):
     """ Validates the gvs_token provided in the config.ini file.
         Used primarily to alert the user of an error.
@@ -528,3 +566,17 @@ def install_gvs(gui_enabled=False):
         except Exception as e:
             print('ERROR:\t' + str(e))
 #//=========================================
+
+#//=========================================
+def run_opennsa():
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
+    source_loc= str(apps_dir) + '/opennsa3'
+    tac_loc = source_loc + '/datafiles/opennsa.tac'
+    try:
+        stanout = subprocess.run(['twistd', '-yn', tac_loc])
+        if stanout.stdout is not None and verbose:
+            print(stanout.stdout)
+    except Exception as e:
+        print('ERROR: Unable to start OpenNSA, ' + str(e))
+#//=========================================
+

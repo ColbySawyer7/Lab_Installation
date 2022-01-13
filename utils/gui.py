@@ -142,18 +142,22 @@ def start_gui():
     curr_w, curr_h = sg.Window.get_screen_size()
     butt_w = int(curr_w * .025)
     butt_h = int(curr_h * .003)
-    sg.Button()
+    nsa_status = is_nsa_installed()
+
     layout = [[sg.Text('Main Menu', font='Any 15')],
-            [sg.Col([
-            [sg.B('OpenNSA Installation',size=(butt_w,butt_h))],
-            #[sg.B('OpenNSA Automatic Configuration', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
-            [sg.B('OpenVPN Installation and Configuration', size=(butt_w,butt_h))],
-            [sg.B('GVS Installation', size=(butt_w,butt_h))],
-            [sg.B('Install Required Python Libraries', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
-            [sg.B('Dependency Helper', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
-            [sg.B('Update', size=(butt_w,butt_h), button_color=GREEN_BUTTON_COLOR)],
-            [sg.B('Settings', size=(butt_w,butt_h), button_color=DARK_GRAY_BUTTON_COLOR)],
-            [sg.B('Exit', size=(butt_w,butt_h), button_color=LIGHT_GRAY_BUTTON_COLOR)],], element_justification='c', vertical_alignment='c', expand_x=True,expand_y=True)]]
+                [sg.Col([
+                    [sg.B('OpenNSA Installation',size=(butt_w,butt_h),disabled=nsa_status)],
+                    [sg.Button('Run OpenNSA', size=(butt_w,butt_h), disabled=(not nsa_status))],
+                    #[sg.B('OpenNSA Automatic Configuration', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
+                    [sg.B('OpenVPN Installation and Configuration', size=(butt_w,butt_h))],
+                    [sg.B('GVS Installation', size=(butt_w,butt_h))],
+                    [sg.B('Install Required Python Libraries', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
+                    [sg.B('Dependency Helper', size=(butt_w,butt_h), button_color=BLUE_BUTTON_COLOR)],
+                    [sg.B('Update', size=(butt_w,butt_h), button_color=GREEN_BUTTON_COLOR)],
+                    [sg.B('Settings', size=(butt_w,butt_h), button_color=DARK_GRAY_BUTTON_COLOR)],
+                    [sg.B('Exit', size=(butt_w,butt_h), button_color=LIGHT_GRAY_BUTTON_COLOR)],
+                ], element_justification='c', vertical_alignment='c', expand_x=True,expand_y=True)],
+            ]
 
     window = sg.Window('BRIDGES Lab Installation', layout, resizable=True, size=(400,600), icon=BRIDGES_ICON)
 
@@ -172,6 +176,8 @@ def start_gui():
             configure_openvpn(gui_enabled=True)
         elif event == 'GVS Installation':
             install_gvs(gui_enabled=True)
+        elif event == 'Run OpenNSA':
+            run_opennsa()
         elif event == 'Update':
             try:
                 update()
