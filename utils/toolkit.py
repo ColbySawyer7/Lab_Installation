@@ -86,12 +86,8 @@ def validate_postgres():
 #//=========================================
 def update():
     """Performs 'Update' of Script source. Pulls down the latest from git
-
-        Assumptions:
-            Working Directory is Lab_Installation
     """
     #TODO: Sync with GUI to dispay a loading bar
-    print(BR_MAIN_LOCATION)
     try:
         Repo(BR_MAIN_LOCATION).remotes.origin.pull()
     except Exception as e:
@@ -326,7 +322,8 @@ def install_opennsa(gui_enabled=False):
             lab_install_dir = os.getcwd()
             source_loc= str(apps_dir) + '/opennsa3'
 
-            Repo.clone_from(repoURL,apps_dir)
+            if not os.path.isdir(source_loc):
+                Repo.clone_from(repoURL,apps_dir)
 
             os.chdir('opennsa3')
 
@@ -395,7 +392,8 @@ def install_opennsa(gui_enabled=False):
             repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
             lab_install_dir = os.getcwd()
             source_loc=apps_dir + '/opennsa3'
-            Repo.clone_from(repoURL,apps_dir)
+            if not os.path.isdir(source_loc):
+                Repo.clone_from(repoURL,apps_dir)
 
             os.chdir('opennsa3')
 
@@ -479,9 +477,8 @@ def install_gvs(gui_enabled=False):
                 repoURL = '@github.com/jwsobieski/GVS.git'
                 repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
                 try:
-                    Repo.clone_from(repoURL,to_path=apps_dir)
-                    #Navigate back to Lab Installation dir 
-                    os.chdir(lab_install_dir)
+                    if not os.path.isdir(str(apps_dir) + '/GVS'):
+                        Repo.clone_from(repoURL,to_path=apps_dir)
                 except Exception as e:
                     sg.popup_timed('ERROR: GVS source could not be pulled', auto_close_duration=60)
                     print('ERROR: GVS source could not be pulled')
@@ -519,8 +516,8 @@ def install_gvs(gui_enabled=False):
                     if stanout.stdout is not None and verbose:
                         print(stanout.stdout)
                 else:
-                    os.chdir(apps_dir)
-                    Repo.clone_from(repoURL,apps_dir)
+                    if not os.path.isdir(str(apps_dir) + '/GVS'):
+                        Repo.clone_from(repoURL,apps_dir)
 
                 #Navigate back to Lab Installation dir 
                 os.chdir(lab_install_dir)
