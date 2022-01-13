@@ -79,7 +79,7 @@ def validate_postgres():
         else:
             return True
     except Exception as e:
-        sg.popup_timed('ERROR: Unable to establish connection with postgres locally')
+        sg.popup_timed('ERROR: Unable to establish connection with postgres locally. Check the given postgres password')
         return False   
 #//=========================================
 
