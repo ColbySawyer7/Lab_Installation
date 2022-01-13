@@ -230,7 +230,7 @@ def setup_opennsa(setup_db=False):
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 
-    print("OpenNSA Instance Setup complete")
+    #print("OpenNSA Instance Setup complete")
 #//=========================================
 
 #TODO: See if parameterized calling of script is available (could incorporate into GUI)
@@ -314,12 +314,13 @@ def install_opennsa(gui_enabled=False):
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
 
         sg.Print('****************************************************************************')
-        sg.Print('\nWARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the settings.\n')
+        sg.Print('WARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the settings.')
         sg.Print('****************************************************************************')
 
         #Clone OpenNSA (From Geant Gitlab)
         sg.Print('\n\n***************************************************************************')
-        sg.Print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
+        sg.Print('Installing OpenNSA...')
+        sg.Print('This may take a minute, Please wait for entire process to complete')
         sg.Print('****************************************************************************')
 
 
@@ -334,7 +335,9 @@ def install_opennsa(gui_enabled=False):
             #verify_python3()
             verify_pip()
 
+            sg.Print('****************************************************************************')
             sg.Print('Installing OpenNSA Dependencies...\n')
+            sg.Print('****************************************************************************')
 
             install('python3-dev')
             install('libpq-dev')
@@ -344,7 +347,10 @@ def install_opennsa(gui_enabled=False):
             install('python3-bcrypt')
 
             # OpenNSA Configuration
+            sg.Print('****************************************************************************')
             sg.Print("\n\nOpenNSA Configuration Starting ...")
+            sg.Print('****************************************************************************')
+
 
             reply = sg.popup_yes_no('Would you like for the database to be configured at this time? (y/n): ')
             if reply[0] == 'Y':
@@ -352,6 +358,7 @@ def install_opennsa(gui_enabled=False):
             else:
                 setup_opennsa()
             mess = "Would you like for the database to be configured at this time? (y/n): " + str(reply)
+            sg.Print('****************************************************************************')
             sg.Print(mess)
 
             # Certification Creation 
@@ -360,12 +367,17 @@ def install_opennsa(gui_enabled=False):
                 generate_ssl_cert()
             mess = "Would you like to generate a self-signed certification? (y/n): " + str(reply)
             sg.Print(mess)
+            sg.Print('****************************************************************************')
+
             # Change ownership for certs to Opennsa user only.
             #gid = grp.getgrnam("nogroup").gr_gid
             #uid = pwd.getpwnam("opennsa").pw_uid
             #os.chown('keys', uid, gid)
 
+            sg.Print('****************************************************************************')
             sg.Print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+            sg.Print('****************************************************************************')
+
             """
             reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
             tac_loc = source_loc + '/datafiles/opennsa.tac'
@@ -378,17 +390,22 @@ def install_opennsa(gui_enabled=False):
                 os.chdir(lab_install_dir)
             """
             sg.popup_timed("OpenNSA Installation Complete!", auto_close_duration=60)
-            sg.Print('Source Code Location:' + source_loc)
+            sg.Print('****************************************************************************')
+            sg.Print('Source Code Location:' + source_loc, font='bold')
+            sg.Print('****************************************************************************')
+
         except Exception as e:
+            sg.Print('****************************************************************************')
             sg.Print('ERROR:\t' + str(e))
+            sg.Print('****************************************************************************')
     else:
         print('****************************************************************************')
-        print('\nWARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the config.ini.\n')
+        print('\nWARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the config.ini.')
         print('****************************************************************************')
 
         #Clone OpenNSA (From Geant Gitlab)
         print('\n\n***************************************************************************')
-        print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
+        print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete')
         print('****************************************************************************')
 
         try:
@@ -401,7 +418,9 @@ def install_opennsa(gui_enabled=False):
             #verify_python3()
             verify_pip()
 
+            print('****************************************************************************')
             print('Installing OpenNSA Dependencies...\n')
+            print('****************************************************************************')
 
             install('python3-dev')
             install('libpq-dev')
@@ -411,7 +430,9 @@ def install_opennsa(gui_enabled=False):
             install('python3-bcrypt')
 
             # OpenNSA Configuration
+            print('****************************************************************************')
             print("\n\nOpenNSA Configuration Starting ...")
+            print('****************************************************************************')
 
             reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
             if reply[0] == 'y':
@@ -428,8 +449,9 @@ def install_opennsa(gui_enabled=False):
             #gid = grp.getgrnam("nogroup").gr_gid
             #uid = pwd.getpwnam("opennsa").pw_uid
             #os.chown('keys', uid, gid)
-
+            print('****************************************************************************')
             print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+            print('****************************************************************************')
             
             reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
             tac_loc = source_loc + '/datafiles/opennsa.tac'
@@ -437,11 +459,14 @@ def install_opennsa(gui_enabled=False):
                 stanout = subprocess.run(['twistd', '-yn', tac_loc])
                 if stanout.stdout is not None and verbose:
                     print(stanout.stdout)
-            
+            print('****************************************************************************')
             print("\n\nInstallation Complete!")
             print('Source Code Location:' + source_loc)
+            print('****************************************************************************')
         except Exception as e:
+            print('****************************************************************************')
             print('ERROR:\t' + str(e))
+            print('****************************************************************************')
 #//=========================================
  
 #//=========================================
