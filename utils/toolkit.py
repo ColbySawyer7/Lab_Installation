@@ -481,13 +481,16 @@ def install_gvs(gui_enabled=False):
                     os.chdir(lab_install_dir)
                 except Exception as e:
                     sg.popup_timed('ERROR: GVS source could not be pulled', auto_close_duration=60)
+                    print('ERROR: GVS source could not be pulled')
                     return
                 sg.popup_timed("Installation Complete!", auto_close_duration=60)
                 sg.Print('Source Code Location:' + source_loc)                    
             elif not isString:
                 sg.Print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
+                print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
             else:
-                sg.Print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
+                sg.Print('ERROR (Private Repo Access Denied): You have not added the proper key/token in the settings')
+                print('ERROR (Private Repo Access Denied): You have not added the proper key/token in the settings')
         except Exception as e:
             sg.Print('ERROR:\t' + str(e))
     else:
@@ -524,7 +527,7 @@ def install_gvs(gui_enabled=False):
             elif not isString:
                 print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
             else:
-                print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the keys.py file')
+                print('ERROR (Private Repo Access Denied): You have not added the proper key/token to the config.ini file')
         except Exception as e:
             print('ERROR:\t' + str(e))
 #//=========================================
