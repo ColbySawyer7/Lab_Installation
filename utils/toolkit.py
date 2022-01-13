@@ -11,7 +11,7 @@ from psycopg2.errors import DuplicateObject, DuplicateDatabase
 verbose = True
 #//=========================================
 def reload_settings():
-    """[summary]
+    """Helper function that will load the settings from the config.ini file at time of calling
 
     Returns:
         [multiple]: [Returns entire settings parameters in following order: db_user, db_name, db_password, default_path, apps_dir, gvs_token]
@@ -26,8 +26,9 @@ def reload_settings():
     default_path = settings['Main']['default_path']
     apps_dir = settings['Main']['apps_dir']
     gvs_token = settings['Main']['gvs_token']
+    postgres_pwd = settings['Main']['postgres_pwd']
 
-    return db_user, db_name, db_password, default_path, apps_dir, gvs_token
+    return db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd
 #//=========================================
 
 #//=========================================
@@ -42,7 +43,7 @@ def validate_gvs_key(gvs_token=None):
         [bool]: [False if non compliant. True is compliant]
     """
     if gvs_token is None:
-        db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+        db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     try:
         if gvs_token is not None:
@@ -61,8 +62,24 @@ def validate_gvs_key(gvs_token=None):
 
 #//=========================================
 def validate_postgres():
-    #TODO: COMPLETE THIS FUNC
-    return None
+    """Validates the usability and versioning of postgres
+
+    Returns:
+        [bool]: [False if not a compliant or reachable instance of postgres. True if compliant version and reachable by tool]
+    """
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
+    #Connect to DB
+    try:
+        conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
+    except Exception as e:
+        sg.popup_timed('ERROR: Unable to establish connection with postgres locally')
+    finally:
+        version = conn.server_version
+        conn.close()
+        if version < 120000 and version >= 130000:
+            return False
+        else:
+            return True
 #//=========================================
 
 #//=========================================
@@ -155,7 +172,7 @@ def setup_opennsa(setup_db=False):
     Args:
         setup_db (bool, optional): [Specifies if the database configuration is to be included in the procedure]. Defaults to False (database untouched).
     """
-    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     os.chdir('../opennsa3')
 
@@ -163,7 +180,7 @@ def setup_opennsa(setup_db=False):
         print("Database configuration starting")
 
         #Connect to DB
-        conn = psycopg2.connect(host='localhost', user='postgres', password='postgres')
+        conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
         conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         with conn.cursor() as cursor:
             commands =[
@@ -250,7 +267,7 @@ def configure_openvpn(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
-    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     #Hard Code Install
     #print('Installing OpenVPN...\n\nThis may take a minute, Please wait for entire process to complete\n')
@@ -285,7 +302,7 @@ def install_opennsa(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
-    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     if gui_enabled:
         # This is the normal print that comes with simple GUI
@@ -442,11 +459,11 @@ def install_gvs(gui_enabled=False):
     Args:
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
-    db_user, db_name, db_password, default_path, apps_dir, gvs_token = reload_settings()
+    db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
     if gui_enabled:
         # This is the normal print that comes with simple GUI
-        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
+        sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
 
         try:
             if not validate_gvs_key():
@@ -463,23 +480,26 @@ def install_gvs(gui_enabled=False):
                 repoURL = '@github.com/jwsobieski/GVS.git'
                 repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
 
-                if os.path.isdir(apps_dir + '/GVS'):
-                    sg.Print('GVS Source exists, pulling most recent version now')
-                    os.chdir(apps_dir + '/GVS')
-                    stanout = subprocess.run(['git', 'pull', repoURL])
-                    if stanout.stdout is not None and verbose:
-                        sg.Print(stanout.stdout)
-                else:
-                    os.chdir(apps_dir)
-                    stanout = subprocess.run(['git', 'clone', repoURL])
-                    if stanout.stdout is not None and verbose:
-                        sg.Print(stanout.stdout)
+                try:
+                    if os.path.isdir(apps_dir + '/GVS'):
+                        sg.Print('GVS Source exists, pulling most recent version now')
+                        os.chdir(apps_dir + '/GVS')
+                        stanout = subprocess.run(['git', 'pull', repoURL])
+                        if stanout.stdout is not None and verbose:
+                            sg.Print(stanout.stdout)
+                    else:
+                        os.chdir(apps_dir)
+                        stanout = subprocess.run(['git', 'clone', repoURL])
+                        if stanout.stdout is not None and verbose:
+                            sg.Print(stanout.stdout)
 
-                #Navigate back to Lab Installation dir 
-                os.chdir(lab_install_dir)
-                
-                sg.popup_timed("Installation Complete!", auto_close_duration=60)
-                sg.Print('Source Code Location:' + source_loc)
+                    #Navigate back to Lab Installation dir 
+                    os.chdir(lab_install_dir)
+                except Exception as e:
+                    sg.popup_timed('ERROR: GVS source could not be pulled', auto_close_duration=60)
+                finally:
+                    sg.popup_timed("Installation Complete!", auto_close_duration=60)
+                    sg.Print('Source Code Location:' + source_loc)
             elif not isString:
                 sg.Print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
             else:
