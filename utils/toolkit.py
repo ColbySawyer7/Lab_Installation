@@ -73,6 +73,7 @@ def validate_postgres():
     try:
         conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
         version = conn.server_version
+        print(version)
         conn.close()
         if version < 120000 and version >= 130000:
             return False
