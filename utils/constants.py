@@ -1,12 +1,11 @@
 ### ----------------------------------
 ###     DO NOT MODIFY THS FILE
 ### ----------------------------------
-#Settings File Location
-
+#File Locations
 import pathlib
 pathlib.Path(__file__).parent.resolve()
-
-SETTINGS_FILE_LOCATION ='utils/config.ini'
+BR_MAIN_LOCATION = __file__[:-19]
+SETTINGS_FILE_LOCATION = BR_MAIN_LOCATION + '/utils/config.ini'
 ### ----------------------------------
 ###     DO NOT MODIFY THS FILE
 ### ----------------------------------

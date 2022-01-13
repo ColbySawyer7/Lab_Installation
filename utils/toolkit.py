@@ -1,16 +1,13 @@
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
-from .constants import SETTINGS_FILE_LOCATION
+from .constants import SETTINGS_FILE_LOCATION, BR_MAIN_LOCATION
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
 from git import Repo
-
-import pathlib
-pathlib.Path(__file__).parent.resolve()
 
 verbose = True
 #//=========================================
@@ -94,9 +91,9 @@ def update():
             Working Directory is Lab_Installation
     """
     #TODO: Sync with GUI to dispay a loading bar
-    print(str(__file__))
+    print(BR_MAIN_LOCATION)
     try:
-        Repo(__file__).remotes.origin.pull()
+        Repo(BR_MAIN_LOCATION).remotes.origin.pull()
     except Exception as e:
         print('ERROR: ' + str(e))
         return
