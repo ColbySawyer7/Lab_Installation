@@ -336,7 +336,7 @@ def install_opennsa(gui_enabled=False):
             verify_pip()
 
             sg.Print('****************************************************************************')
-            sg.Print('Installing OpenNSA Dependencies...\n')
+            sg.Print('Installing OpenNSA Dependencies...')
             sg.Print('****************************************************************************')
 
             install('python3-dev')
@@ -348,7 +348,7 @@ def install_opennsa(gui_enabled=False):
 
             # OpenNSA Configuration
             sg.Print('****************************************************************************')
-            sg.Print("\n\nOpenNSA Configuration Starting ...")
+            sg.Print("OpenNSA Configuration Starting ...")
             sg.Print('****************************************************************************')
 
 
@@ -375,7 +375,7 @@ def install_opennsa(gui_enabled=False):
             #os.chown('keys', uid, gid)
 
             sg.Print('****************************************************************************')
-            sg.Print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+            sg.Print('**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
             sg.Print('****************************************************************************')
 
             """
@@ -419,7 +419,7 @@ def install_opennsa(gui_enabled=False):
             verify_pip()
 
             print('****************************************************************************')
-            print('Installing OpenNSA Dependencies...\n')
+            print('Installing OpenNSA Dependencies...')
             print('****************************************************************************')
 
             install('python3-dev')
@@ -431,7 +431,7 @@ def install_opennsa(gui_enabled=False):
 
             # OpenNSA Configuration
             print('****************************************************************************')
-            print("\n\nOpenNSA Configuration Starting ...")
+            print("OpenNSA Configuration Starting ...")
             print('****************************************************************************')
 
             reply = str(input('\nWould you like for the database to be configured at this time?' +' (y/n): ')).lower().strip()
@@ -450,7 +450,7 @@ def install_opennsa(gui_enabled=False):
             #uid = pwd.getpwnam("opennsa").pw_uid
             #os.chown('keys', uid, gid)
             print('****************************************************************************')
-            print('\n\n**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
+            print('**Warning: The .cert and .key files are not R/W protected by one user. It is your responsilbity to secure these files')
             print('****************************************************************************')
             
             reply = str(input('\nWould you like to run an instance of OpenNSA now?' +' (y/n): ')).lower().strip()
@@ -460,7 +460,7 @@ def install_opennsa(gui_enabled=False):
                 if stanout.stdout is not None and verbose:
                     print(stanout.stdout)
             print('****************************************************************************')
-            print("\n\nInstallation Complete!")
+            print("Installation Complete!")
             print('Source Code Location:' + source_loc)
             print('****************************************************************************')
         except Exception as e:
