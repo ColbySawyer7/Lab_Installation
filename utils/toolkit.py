@@ -212,14 +212,15 @@ def setup_opennsa(setup_db=False):
         # Verify PostGreSQL is 12.0.0+
         if conn.server_version < 120000:
             print("ERROR: You are using an outdated version of Postgres (Postgres 12+ is required)")
-
-        print("Filling Databse from file: " + path)
-        with conn.cursor() as cursor:
-            cursor.execute(open(path, "r").read())
-            conn.commit()
-            cursor.close()
-            conn.close()
-            print('Database filled from file' + path)
+            return
+        else:
+            print("Filling Database from file: " + path)
+            with conn.cursor() as cursor:
+                cursor.execute(open(path, "r").read())
+                conn.commit()
+                cursor.close()
+                conn.close()
+                print('Database filled from file: ' + path)
 
     setup_file_loc = source_loc + '/setup.py'
     stanout = subprocess.run(['sudo', 'python3', setup_file_loc , 'build'])
