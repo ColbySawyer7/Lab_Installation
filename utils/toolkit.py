@@ -252,14 +252,14 @@ def generate_ssl_cert():
     
     key_dir_dest = source_loc + '/keys'
     crt_dir_dest = source_loc + '/certs'
-    
+
     if not os.path.exists(key_dir_dest):
         os.makedirs(key_dir_dest)
     if not os.path.exists(crt_dir_dest):
         os.makedirs(crt_dir_dest)
 
-    keys_file_loc = BR_MAIN_LOCATION + '/opennsa-selfsigned.key'
-    crt_file_loc = BR_MAIN_LOCATION + '/opennsa-selfsigned.crt'
+    keys_file_loc = BR_MAIN_LOCATION[:-17] + '/opennsa-selfsigned.key'
+    crt_file_loc = BR_MAIN_LOCATION[:-17] + '/opennsa-selfsigned.crt'
 
     keys_file_dest = str(source_loc) + 'keys/opennsa-selfsigned.key'
     crt_file_dest = str(source_loc) + 'certs/opennsa-selfsigned.crt'
