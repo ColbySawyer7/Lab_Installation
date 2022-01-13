@@ -1,7 +1,7 @@
 import argparse, subprocess, os, sys
 import PySimpleGUI as sg
 
-from .constants import SETTINGS_FILE_LOCATION, BR_MAIN_LOCATION
+from .constants import GVS_SOURCE_URL, OPENNSA_SOURCE_URL, SETTINGS_FILE_LOCATION, BR_MAIN_LOCATION
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -174,7 +174,8 @@ def setup_opennsa(setup_db=False):
     """
     db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
-    os.chdir('../opennsa3')
+    source_loc= str(apps_dir) + '/opennsa3'
+    os.chdir(source_loc)
 
     if setup_db:
         print("Database configuration starting")
@@ -303,7 +304,9 @@ def install_opennsa(gui_enabled=False):
         gui_enabled (bool, optional): [Set true is GUI is being used]. Defaults to False.
     """
     db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
-
+    repoURL = OPENNSA_SOURCE_URL
+    source_loc= str(apps_dir) + '/opennsa3'
+        
     if gui_enabled:
         # This is the normal print that comes with simple GUI
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
@@ -317,15 +320,13 @@ def install_opennsa(gui_enabled=False):
         sg.Print('Installing OpenNSA... This may take a minute, Please wait for entire process to complete\n')
         sg.Print('****************************************************************************')
 
-        try:
-            repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
-            lab_install_dir = os.getcwd()
-            source_loc= str(apps_dir) + '/opennsa3'
 
+
+        try:
             if not os.path.isdir(source_loc):
                 Repo.clone_from(repoURL,apps_dir)
 
-            os.chdir('opennsa3')
+            os.chdir(source_loc)
 
             # Install Dependencies
             #verify_python3()
@@ -389,13 +390,10 @@ def install_opennsa(gui_enabled=False):
         print('****************************************************************************')
 
         try:
-            repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
-            lab_install_dir = os.getcwd()
-            source_loc=apps_dir + '/opennsa3'
             if not os.path.isdir(source_loc):
                 Repo.clone_from(repoURL,apps_dir)
 
-            os.chdir('opennsa3')
+            os.chdir(source_loc)
 
             # Install Dependencies
             #verify_python3()
@@ -437,9 +435,6 @@ def install_opennsa(gui_enabled=False):
                 stanout = subprocess.run(['twistd', '-yn', tac_loc])
                 if stanout.stdout is not None and verbose:
                     print(stanout.stdout)
-            else:
-                #Navigate back to Lab Installation dir 
-                os.chdir(lab_install_dir)
             
             print("\n\nInstallation Complete!")
             print('Source Code Location:' + source_loc)
@@ -458,6 +453,10 @@ def install_gvs(gui_enabled=False):
     """
     db_user, db_name, db_password, default_path, apps_dir, gvs_token, postgres_pwd = reload_settings()
 
+    source_loc = str(apps_dir) + '/GVS'
+    username = 'ColbySawyer7'
+    remote = f"https://{username}:{str(gvs_token)}" + GVS_SOURCE_URL
+
     if gui_enabled:
         # This is the normal print that comes with simple GUI
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
@@ -471,14 +470,9 @@ def install_gvs(gui_enabled=False):
             isString = isinstance(gvs_token,str)
             if gvs_token is not None and isString:
                 sg.Print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
-                lab_install_dir = os.getcwd()
-                source_loc = apps_dir + '/GVS'
-
-                repoURL = '@github.com/jwsobieski/GVS.git'
-                repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
                 try:
                     if not os.path.isdir(str(apps_dir) + '/GVS'):
-                        Repo.clone_from(repoURL,to_path=apps_dir)
+                        Repo.clone_from(remote,to_path=apps_dir)
                 except Exception as e:
                     sg.popup_timed('ERROR: GVS source could not be pulled', auto_close_duration=60)
                     print('ERROR: GVS source could not be pulled')
@@ -498,29 +492,15 @@ def install_gvs(gui_enabled=False):
             if not validate_gvs_key():
                 print('ERROR: Unable to validate key.py file')
                 return
-                #Exception('ERROR: GVS Key file requires attention')
 
             isString = isinstance(gvs_token,str)
             if gvs_token is not None and isString:
                 print('Installing GVS...\n\nThis may take a minute, Please wait for entire process to complete\n')
-                lab_install_dir = os.getcwd()
-                source_loc = apps_dir + '/GVS'
-
-                repoURL = '@github.com/jwsobieski/GVS.git'
-                repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
-
-                if os.path.isdir(apps_dir + '/GVS'):
-                    print('GVS Source exists, pulling most recent version now')
-                    os.chdir(apps_dir + '/GVS')
-                    stanout = subprocess.run(['git', 'pull', repoURL])
-                    if stanout.stdout is not None and verbose:
-                        print(stanout.stdout)
+                if os.path.isdir(source_loc):
+                    Repo(source_loc).remotes.origin.pull()
                 else:
                     if not os.path.isdir(str(apps_dir) + '/GVS'):
-                        Repo.clone_from(repoURL,apps_dir)
-
-                #Navigate back to Lab Installation dir 
-                os.chdir(lab_install_dir)
+                        Repo.clone_from(remote,apps_dir)
                 
                 print("\n\nInstallation Complete!")
                 print('Source Code Location:' + source_loc)

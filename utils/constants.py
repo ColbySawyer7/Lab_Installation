@@ -9,6 +9,11 @@ SETTINGS_FILE_LOCATION = BR_MAIN_LOCATION + '/utils/config.ini'
 ### ----------------------------------
 ###     DO NOT MODIFY THS FILE
 ### ----------------------------------
+GVS_SOURCE_URL="@github.com/jwsobieski/GVS.git"
+OPENNSA_SOURCE_URL='https://gitlab.geant.org/hazlinsky/opennsa3.git'
+### ----------------------------------
+###     DO NOT MODIFY THS FILE
+### ----------------------------------
 # Colors
 BLUE_BUTTON_COLOR = '#FFFFFF on #2196f2'
 GREEN_BUTTON_COLOR ='#FFFFFF on #00c851'
