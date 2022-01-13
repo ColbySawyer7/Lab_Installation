@@ -2,7 +2,11 @@
 ###     DO NOT MODIFY THS FILE
 ### ----------------------------------
 #Settings File Location
-SETTINGS_FILE_LOCATION = 'utils/config.ini'
+
+import pathlib
+pathlib.Path(__file__).parent.resolve()
+
+SETTINGS_FILE_LOCATION ='utils/config.ini'
 ### ----------------------------------
 ###     DO NOT MODIFY THS FILE
 ### ----------------------------------

@@ -9,6 +9,9 @@ from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
 from git import Repo
 
+import pathlib
+pathlib.Path(__file__).parent.resolve()
+
 verbose = True
 #//=========================================
 def reload_settings():
@@ -91,9 +94,12 @@ def update():
             Working Directory is Lab_Installation
     """
     #TODO: Sync with GUI to dispay a loading bar
-    stanout = subprocess.run(['git', 'pull'])
-    if stanout.stdout is not None and verbose:
-        print(stanout.stdout)
+    print(str(__file__))
+    try:
+        Repo(__file__).remotes.origin.pull()
+    except Exception as e:
+        print('ERROR: ' + str(e))
+        return
     print("Update Complete!")
 #//=========================================
 
