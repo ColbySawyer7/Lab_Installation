@@ -73,11 +73,11 @@ def validate_postgres():
     try:
         conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
         version = conn.server_version
-        print(version)
         conn.close()
         if int(version) < 120000 and int(version) >= 130000:
             return False
         else:
+            print(version)
             return True
     except Exception as e:
         sg.popup_timed('ERROR: Unable to establish connection with postgres locally. Check the given postgres password')
