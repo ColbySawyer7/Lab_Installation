@@ -72,15 +72,15 @@ def validate_postgres():
     #Connect to DB
     try:
         conn = psycopg2.connect(host='localhost', user='postgres', password=str(postgres_pwd))
-    except Exception as e:
-        sg.popup_timed('ERROR: Unable to establish connection with postgres locally')
-    finally:
         version = conn.server_version
         conn.close()
         if version < 120000 and version >= 130000:
             return False
         else:
             return True
+    except Exception as e:
+        sg.popup_timed('ERROR: Unable to establish connection with postgres locally')
+        
 #//=========================================
 
 #//=========================================
@@ -232,6 +232,7 @@ def setup_opennsa(setup_db=False):
     print("OpenNSA Instance Setup complete")
 #//=========================================
 
+#TODO: See if parameterized calling of script is available (could incorporate into GUI)
 #//=========================================
 def generate_ssl_cert():
     """Generates a basic SSL certificate. 
@@ -312,7 +313,7 @@ def install_opennsa(gui_enabled=False):
         sg.Print('Re-routing the stdout', do_not_reroute_stdout=False, )
 
         sg.Print('****************************************************************************')
-        sg.Print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+        sg.Print('\nWARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the settings.\n')
         sg.Print('****************************************************************************')
 
         #Clone OpenNSA (From Geant Gitlab)
@@ -381,7 +382,7 @@ def install_opennsa(gui_enabled=False):
             sg.Print('ERROR:\t' + str(e))
     else:
         print('****************************************************************************')
-        print('\nWarning: It is up to the user to secure the database. Best way to do this is to change the default passwords stored in the constants.py file\n')
+        print('\nWARNING: It is up to the user to secure the database. Best way to do this is to change the default password stored in the config.ini.\n')
         print('****************************************************************************')
 
         #Clone OpenNSA (From Geant Gitlab)
