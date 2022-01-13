@@ -5,3 +5,4 @@ twistar
 setuptools-rust
 pyOpenSSL
 PySimpleGUI
+gitpython

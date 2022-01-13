@@ -7,6 +7,7 @@ import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateObject, DuplicateDatabase
 
+from git import Repo
 
 verbose = True
 #//=========================================
@@ -148,7 +149,7 @@ def pip_install():
     if stanout.stdout is not None and verbose:
         print(stanout.stdout)
 #//=========================================
-
+  
 #//=========================================
 def install(package):
     """Helper Function that stores the default install command for using the linux package manager
@@ -321,10 +322,8 @@ def install_opennsa(gui_enabled=False):
             repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
             lab_install_dir = os.getcwd()
             source_loc= str(apps_dir) + '/opennsa3'
-            os.chdir(apps_dir)
-            stanout = subprocess.run(['git', 'clone', repoURL])
-            if stanout.stdout is not None and verbose:
-                sg.Print(stanout.stdout)
+
+            Repo.clone_from(repoURL,apps_dir)
 
             os.chdir('opennsa3')
 
@@ -393,10 +392,7 @@ def install_opennsa(gui_enabled=False):
             repoURL = 'https://gitlab.geant.org/hazlinsky/opennsa3.git'
             lab_install_dir = os.getcwd()
             source_loc=apps_dir + '/opennsa3'
-            os.chdir(apps_dir)
-            stanout = subprocess.run(['git', 'clone', repoURL])
-            if stanout.stdout is not None and verbose:
-                print(stanout.stdout)
+            Repo.clone_from(repoURL,apps_dir)
 
             os.chdir('opennsa3')
 
@@ -479,20 +475,8 @@ def install_gvs(gui_enabled=False):
 
                 repoURL = '@github.com/jwsobieski/GVS.git'
                 repoURL = 'https://ColbySawyer7:' + gvs_token + repoURL
-
                 try:
-                    if os.path.isdir(apps_dir + '/GVS'):
-                        sg.Print('GVS Source exists, pulling most recent version now')
-                        os.chdir(apps_dir + '/GVS')
-                        stanout = subprocess.run(['git', 'pull', repoURL])
-                        if stanout.stdout is not None and verbose:
-                            sg.Print(stanout.stdout)
-                    else:
-                        os.chdir(apps_dir)
-                        stanout = subprocess.run(['git', 'clone', repoURL])
-                        if stanout.stdout is not None and verbose:
-                            sg.Print(stanout.stdout)
-
+                    Repo.clone_from(repoURL,to_path=apps_dir)
                     #Navigate back to Lab Installation dir 
                     os.chdir(lab_install_dir)
                 except Exception as e:
@@ -530,9 +514,7 @@ def install_gvs(gui_enabled=False):
                         print(stanout.stdout)
                 else:
                     os.chdir(apps_dir)
-                    stanout = subprocess.run(['git', 'clone', repoURL])
-                    if stanout.stdout is not None and verbose:
-                        print(stanout.stdout)
+                    Repo.clone_from(repoURL,apps_dir)
 
                 #Navigate back to Lab Installation dir 
                 os.chdir(lab_install_dir)
