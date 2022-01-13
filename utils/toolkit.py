@@ -481,9 +481,9 @@ def install_gvs(gui_enabled=False):
                     os.chdir(lab_install_dir)
                 except Exception as e:
                     sg.popup_timed('ERROR: GVS source could not be pulled', auto_close_duration=60)
-                finally:
-                    sg.popup_timed("Installation Complete!", auto_close_duration=60)
-                    sg.Print('Source Code Location:' + source_loc)
+                    return
+                sg.popup_timed("Installation Complete!", auto_close_duration=60)
+                sg.Print('Source Code Location:' + source_loc)                    
             elif not isString:
                 sg.Print('ERROR (Improper Key): Please verify you have the proper key/token in the keys.py file AND is a String')
             else:
