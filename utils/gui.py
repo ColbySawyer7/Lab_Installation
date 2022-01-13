@@ -177,7 +177,7 @@ def start_gui():
                 update()
             except Exception as e:
                 sg.popup('ERROR: ' + str(e))
-            sg.popup('Up to date!')
+            sg.popup('Up to date! Notice: some update changes may require application restart')
         elif event == 'Settings':
             theme_change = settings_window()
             if theme_change:
