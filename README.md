@@ -8,6 +8,13 @@ Automated python installed for various necessary BRIDGES infrastructure software
 Git provides the simplest way to pull the code to any device (REQ: Linux)
 
     git pull https://github.com/ColbySawyer7/Lab_Installation.git
+
+It is recommended that you install the Python packages for the script in a virtual environment dedicated to this application. To do so:
+- Follow the 'Creating Virtual Environment' steps below
+- Once complete,
+ 
+        python3 -m pip install -r [BR-TOOL-LOCATION]/requirements.txt
+
  
 ## Usage
 
@@ -68,7 +75,7 @@ Prereq: A token must be generated from an authenticated user to access GVS as it
 </p>
 </details>
 
-<details><summary>Creating Vitural Environment (Recommended)</summary>
+<details><summary>Creating Virtual Environment (Recommended)</summary>
 <p>
 
 #### Install Vituralenv
