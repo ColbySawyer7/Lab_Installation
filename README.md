@@ -13,7 +13,7 @@ It is recommended that you install the Python packages for the script in a virtu
 - Follow the 'Creating Virtual Environment' steps below
 - Once complete,
  
-        python3 -m pip install -r [BR-TOOL-LOCATION]/requirements.txt
+        sudo python3 -m pip install -r [BR-TOOL-LOCATION]/requirements.txt
 
  
 ## Usage
@@ -22,15 +22,15 @@ It is recommended that you install the Python packages for the script in a virtu
 To update parameters for your specific instance please refer to the UPDATE.md (Recommended for security if not using GUI)
 
 ### General Help
-    python3 br_install.py --help
+    sudo python3 br_install.py --help
 
   
 <details><summary>Using the GUI</summary>
 <p>
 
-    python3 br_install.py -i
+    sudo python3 br_install.py -i
     OR
-    python3 br_install.py --interface
+    sudo python3 br_install.py --interface
 
 When using the above command a window will appear. 
 See example below:
@@ -45,9 +45,9 @@ See example below:
 <details><summary>Installing OpenVPN</summary>
 <p>
 
-    python3 br_install.py -v
+    sudo python3 br_install.py -v
     OR
-    python3 br_install.py --vpn
+    sudo python3 br_install.py --vpn
 
 </p>
 </details>
@@ -56,9 +56,9 @@ See example below:
 <p>
  Prereq: To use a more secure database authentication pair make sure to change the values detailed in UPDATE.md.
 
-    python3 br_install.py -n
+    sudo python3 br_install.py -n
     OR
-    python3 br_install.py --nsa
+    sudo python3 br_install.py --nsa
 
 </p>
 </details>
@@ -68,9 +68,9 @@ See example below:
 <p>
 Prereq: A token must be generated from an authenticated user to access GVS as it is a private. Follow the UPDATE.md for more information. 
 
-    python3 br_install.py -g
+    sudo python3 br_install.py -g
     OR
-    python3 br_install.py --gvs
+    sudo python3 br_install.py --gvs
 
 </p>
 </details>
@@ -92,7 +92,7 @@ Prereq: A token must be generated from an authenticated user to access GVS as it
 
 #### Install Python Packages for Tools
 
-    python3 -m pip install -r requirements.txt
+    sudo python3 -m pip install -r requirements.txt
 
 </p>
 </details>
