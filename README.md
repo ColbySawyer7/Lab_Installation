@@ -19,7 +19,7 @@ It is recommended that you install the Python packages for the script in a virtu
 ## Usage
 
 ### Instance Specific Information
-To update parameters for your specific instance please refer to the UPDATE.md (Recommended for security if not using GUI)
+To update parameters for your specific instance please refer to the UPDATE.md (Recommended for security if not using GUI). Please note that the br_install tool will install (w/ elevated privilege) with generic r/w/e permissions on the application folders. This means any user on the same device WILL see the application source. You will have to manually manage these folders permission to change that. [More Information on changing permissions in Ubuntu](https://help.ubuntu.com/community/FilePermissions)
 
 ### General Help
     sudo python3 br_install.py --help
@@ -54,7 +54,10 @@ See example below:
 
 <details><summary>Installing OpenNSA</summary>
 <p>
- Prereq: To use a more secure database authentication pair make sure to change the values detailed in UPDATE.md.
+
+ Prereq: To use a more secure database authentication pair make sure to change the values detailed in UPDATE.md. 
+ 
+ This tool also assumes that proper conf/nrm files for OpenNSA will be added to the source after the initial installation. There will be future efforts to form a wizard to assist in this configuration process.
 
     sudo python3 br_install.py -n
     OR

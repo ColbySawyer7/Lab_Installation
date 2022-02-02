@@ -10,6 +10,8 @@ from psycopg2.errors import DuplicateObject, DuplicateDatabase
 from git import Repo
 
 verbose = True
+
+#TODO Check for exsisting DB and give user control to remove/replace/restore
 #//=========================================
 def reload_settings():
     """Helper function that will load the settings from the config.ini file at time of calling
