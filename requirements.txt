@@ -1,5 +1,8 @@
 twisted
+pathlib
 psycopg2-binary
 twistar
 setuptools-rust
 pyOpenSSL
+PySimpleGUI
+gitpython
