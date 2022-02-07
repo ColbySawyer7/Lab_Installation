@@ -333,10 +333,12 @@ def configure_openvpn(gui_enabled=False):
     #OpenVPN Road Warrior Install
     #This approach utlizes an opensource OpenVPN install and config shell script from Github
     # repo = 'https://github.com/Nyr/openvpn-install.git'\
+    ovpn_install_loc = str(BR_MAIN_LOCATION + '/utils/openvpn-install.sh')
+
     if gui_enabled:
         sg.popup_timed('NOTICE: This installer utilizes an external tool. Please return to the terminal interface to complete its steps', auto_close_duration=60, keep_on_top=True)
         try: 
-            stanout = subprocess.run(['sudo', 'bash', 'utils/openvpn-install.sh'])
+            stanout = subprocess.run(['sudo', 'bash', ovpn_install_loc])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout) 
             sg.popup("To access your OpenVPN server with an OpenVPN client you will now need to sftp to the server and retrieve the .ovpn file (stores vpn connection settings)", title='OVPN Successful', keep_on_top=True)
@@ -344,7 +346,7 @@ def configure_openvpn(gui_enabled=False):
             sg.popup('ERROR:\t' + str(e))
     else:
         try: 
-            stanout = subprocess.run(['sudo', 'bash', '/utils/openvpn-install.sh'])
+            stanout = subprocess.run(['sudo', 'bash', ovpn_install_loc])
             if stanout.stdout is not None and verbose:
                 print(stanout.stdout)
             print("Installation Complete!")
